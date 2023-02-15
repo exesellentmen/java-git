@@ -130,6 +130,7 @@ public String multithreadingSemaphore(){
     }
 }
 ```
+<br />
 
 **2.11 Мьютекса(MUTual EXclusion - взаимное исключение)** <br />
 **Мьютекса(MUTual EXclusion - взаимное исключение)** - обеспечить такой механизм, чтобы доступ к объекту в определенное время был только у одного потока.<br /> 
@@ -141,6 +142,7 @@ public String multithreadingSemaphore(){
 * на самом деле мьютекс это одноместный Semaphore<br />
 
 **Способы:**
+
 Способ 1
 ```java
 Synchronized(some object) // дает доступ к объекту
