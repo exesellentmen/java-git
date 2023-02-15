@@ -152,10 +152,154 @@ synchronized return_type MethodName(parameters) {
 }
 ```
 
+**Пример:**
+Synchronized<br />
+Например у нас есть число и все потоки к нему получают доступ, например могут его менять, <br />
+Поток 1 - получил доступ<br />
+Поток 2 - получил доступ<br />
+..
+Но если мы добавим блок synchronized, тогда к числу может получить доступ только 1 поток<br />
+Поток 1 - получил доступ<br />
+Поток 1 - освободил доступ<br />
+Поток 2 - получил доступ<br />
+Поток 2 - освободил доступ<br />
+..
 
 
+```java
+//Тестирование Mutex
+@GetMapping("/multithreading-mutex")
+public String multithreadingMutex(){
+    Integer resource = 1;
+    for (int i = 0; i < 8; i++){
+        Thread thread = new Thread(){
+            public void run(){
+                System.out.println(Thread.currentThread().getName() + " начался");
+                synchronized (resource){
+                    System.out.println(Thread.currentThread().getName() + " получил доступ");
+                    try {
 
+                        System.out.println(Thread.currentThread().getName() + "  "+ resource);
+                        Thread.sleep(100);
 
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread().getName() + "освободил доступ");
+                }
+            }
+        };
+        thread.start();
+    }
+    return "test";
+}
+
+```
+
+**ReentrantLock**
+```java
+public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
+    
+    private ReentrantLock mutex = new ReentrantLock();
+
+    @Override
+    public int getNextSequence() {
+        try {
+            mutex.lock();
+            return super.getNextSequence();
+        } finally {
+            mutex.unlock();
+        }
+    }
+}
+```
+
+**2.12 Мониторы(Monitor)** <br />
+**Мониторы(Monitor)** - необходим для мониторинга доступа к ресурсу только одним Thread, синхронизация базируется на Monitor.
+
+**Примечания**
+Каждый Thread неявно владеет одним монитором<br />
+Применяется: с помощью synchronized<br />
+
+**2.13 wait(), notify(), notifyAll()** <br />
+**wait()** - когда у нас один поток вошел в synchronized и вызвал метод wait(), он останавливает работу с этим блоком и переходит в режим ожидания
+
+**notify()** - до тех пор пока другой поток не вызовет метод notify()
+
+**notifyAll()** - возобновляет работу всех потоков, у которых ранее был вызван метод wait()
+
+**Пример:**
+```java
+// Класс Магазин, хранящий произведенные товары
+class Store{
+    private int product=0;
+    public synchronized void get() {
+        while (product<1) {
+            try {
+                wait();
+            }
+            catch (InterruptedException e) {
+            }
+        }
+        product--;
+        System.out.println("Покупатель купил 1 товар");
+        System.out.println("Товаров на складе: " + product);
+        notify();
+    }
+    public synchronized void put() {
+        while (product>=3) {
+            try {
+                wait(); // Запускаем ожидание производителя и разрешаем есть потребителю
+            }
+            catch (InterruptedException e) {
+            }
+        }
+        product++;
+        System.out.println("Производитель добавил 1 товар");
+        System.out.println("Товаров на складе: " + product);
+        notify();
+    }
+}
+// класс Производитель
+class Producer implements Runnable{
+
+    Store store;
+    Producer(Store store){
+        this.store=store;
+    }
+    public void run(){
+        for (int i = 1; i < 6; i++) {
+            store.put();
+        }
+    }
+}
+// Класс Потребитель
+class Consumer implements Runnable{
+
+    Store store;
+    Consumer(Store store){
+        this.store=store;
+    }
+    public void run(){
+        for (int i = 1; i < 6; i++) {
+            store.get();
+        }
+    }
+}
+
+// Тестируем wait(), notify(), notifyAll()
+@GetMapping("/multithreading-wait-etc")
+public String multithreadingWait(){
+
+    Store store=new Store();
+    Producer producer = new Producer(store);
+    Consumer consumer = new Consumer(store);
+    new Thread(producer).start();
+    new Thread(consumer).start();
+
+    return "test";
+}
+```
 
 
 
