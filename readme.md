@@ -218,7 +218,7 @@ public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 **Мониторы(Monitor)** - необходим для мониторинга доступа к ресурсу только одним Thread, синхронизация базируется на Monitor.
 
 **Примечания**
-Каждый Thread неявно владеет одним монитором<br />
+![#f03c15]Каждый Thread неявно владеет одним монитором<br />
 Применяется: с помощью synchronized<br />
 
 **2.13 wait(), notify(), notifyAll()** <br />
