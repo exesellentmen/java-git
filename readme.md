@@ -303,6 +303,213 @@ public String multithreadingWait(){
 }
 ```
 
+**2.14 Гонка данных(Data Race)** <br />
+**Состояния гонки(Data Race)** - случай когда с одним ресурсом работает несколько потоков и в результате они могут получить одно и тоже значение и одновременно выполнить операцию и мы получим например за 1000 иттераций i++ не i = 1000, а например i = 997
+
+**Источники**<br />
+https://javascopes.com/java-mutex-5903ae13/
+
+**2.15 Состояния гонки (Condition Race)** <br />
+**Состояния гонки(Condition Race)** - часто путают с Data Race, это проблема, которая возникает в результате когда время или порядок влияют на результат программы
+
+**Источники**<br />
+https://medium.com/german-gorelkin/race-8936927dba20
+
+**Решение:**<br />
+Иногда можно добиться с помощью синхронизации
+```java
+Пример:
+Thread thA = new Thread(){
+    public void run(){
+        for(int i = 0; i < 10000; i++){
+            System.out.println("Thread A");
+        }
+    }
+};
+
+Thread thB = new Thread(){
+    public void run(){
+        for(int i = 0; i < 10000; i++){
+            System.out.println("Thread B");
+        }
+    }
+};
+
+thA.start();
+thB.start();
+```
+**Результат:**<br />
+Thread A<br />
+Thread B<br />
+Thread A<br />
+Thread B<br />
+Thread A<br />
+Thread A<br />
+
+
+**2.15 Lock Concept in Multithreading** <br />
+**Lock Concept in Multithreading** - альтернатива блока synchronized
+
+Классы блокировок реализуют интерфейс Lock
+
+**Методы:**
+lock() - блокирует доступ
+unlock() - разблокирует доступ
+boolean tryLock() - пытается получить блокировку, если не получается не ожидает ее получения как в lock
+Condition newCondition() - возвращает объект condition, который соответствует блокировке
+
+**ReentrantLock** - реализует интерфейс Lock
+
+Для использования создаем ReentrantLock locker и передаем его всем потокам, если он блокирует, то только тот поток который заблочил блок может им пользоваться остальные ждут
+```java
+locker.lock();
+//...
+locker.unlock();
+```
+
+**ReadWriteLock** - это высокоуровневый инструмент блокировки потоков. Он позволяет различным потокам читать определенный ресурс, но позволяет только одному записывать его одновременно.
+
+**Пример:**
+```java
+ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+readWriteLock.readLock().lock();
+ //... блокировка только 1 может читать
+readWriteLock.readLock().unlock();
+
+readWriteLock.writeLock().lock();
+ //... Только для чтения можно войти в этот блок
+readWriteLock.writeLock().unlock();
+```
+
+**2.16 Thread Deadlock** <br />
+**Thread Deadlock** - Взаимная блокировка - ситуция, которая часто возникает в многопоточности, когда у нас Поток-1 пытается получить доступ к (synchronized)блоку занимаемому Потоком-2, а Поток-2 пытается получить доступ к (synchronized)блоку занимаемый Потоком-1 в результате взаимная блокировка
+
+**Источник:** https://javarush.com/groups/posts/1422-vzaimnaja-blokirovkadeadlock-v-java-i-metodih-borjhbih-s-ney
+
+
+**Пример DeadLock:**
+Например у нас есть задача мы переводим из аккаунта А деньги на счет аккаунта Б и в тоже время мы переводим деньги со счета Б на счет А в результате 1-ый поток блокирует счет А и начинает проводить операции а в то же время 2-ой поток блокирует счет, в результате взаимная блокировка.
+
+```java
+// Пример DeadLock, в результате не будет выполнен перевод, т к 2 потока взаимно заблокировали друг друга
+@GetMapping("/multithreading-deadlock")
+public String multithreadingDeadLock(){
+
+    Account accauntA = new Account();
+    accauntA.count = 10;
+    Account accauntB = new Account();
+    accauntB.count = 10;
+    Bank bank = new Bank();
+
+    Thread threadA = new Thread(){public void run(){
+        try {
+            bank.transferMoney(accauntA, accauntB, 1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }};
+    threadA.start();
+    Thread threadB = new Thread(){public void run(){
+        try {
+            bank.transferMoney(accauntB, accauntA, 1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }};
+    threadB.start();
+
+    return "Test";
+}
+
+class Account{
+    public int count;
+}
+
+class Bank{
+    public void transferMoney(Account fromAccount, Account toAccount, int amount) throws InterruptedException {
+        synchronized (fromAccount) {
+            Thread.sleep(100);
+            synchronized (toAccount) {
+                fromAccount.count = fromAccount.count - amount;
+                toAccount.count = toAccount.count + amount;
+                System.out.println("Operation's completed");
+            }
+        }
+    }
+}
+```
+
+
+**Решение DeadLock** (плохое т к hashcode может быть одинаковым, можно формировать порядок по id или вносить доп переменную):
+```java
+class SmartBank{
+    public void transferMoney(Account fromAccount, Account toAccount, int amount) throws InterruptedException {
+        Account firstAccount, secondAccount;
+        if(fromAccount.hashCode() > toAccount.hashCode()){
+            firstAccount = fromAccount;
+            secondAccount = toAccount;
+        }else {
+            firstAccount = toAccount;
+            secondAccount = fromAccount;
+        }
+
+        synchronized (firstAccount) {
+            Thread.sleep(100);
+            synchronized (secondAccount) {
+                fromAccount.count = fromAccount.count - amount;
+                toAccount.count = toAccount.count + amount;
+                System.out.println("From Smart Bank Operation's completed");
+            }
+        }
+    }
+}
+```
+
+**Решение с помощью Lock**
+```java
+class SuperSmartBank{
+    public void transferMoney(Account fromAccount, Account toAccount, int amount) throws InterruptedException {
+        while(true) {
+            if (fromAccount.lock.tryLock()) {
+                Thread.sleep(100);
+                if (toAccount.lock.tryLock()) {
+                    try {
+                        //do something
+                        fromAccount.count = fromAccount.count - amount;
+                        toAccount.count = toAccount.count + amount;
+                        System.out.println(Thread.currentThread().getName()+" From Smart Bank Operation's completed");
+                        break;
+                    } finally {
+                        toAccount.lock.unlock();
+                        fromAccount.lock.unlock();
+                    }
+                } else {
+                    fromAccount.lock.unlock();
+                }
+            }
+            System.out.println("Attempt");
+        }
+    }
+}
+```
+
+**Проблема состоит в том что из нелегко найти и нужно проводить хороший Code review**
+
+Для решения можно сравнивать по id или хеш коду и давать доступ наименьшему или ввести дополнительный объект
+Пусть у нас есть пара объектов реализующих интерфейс Lock и нам необходимо занять их мониторы так, чтоб избежать взаимной блокировки. Реализовать это можно так:
+
+**Примечания DeadLock**
+- JVM позволяет диагностировать взаимные блокировки отображая их в дампах потоков.
+- Также может помочь lockInterruptibly интерфейса Lock он прирвет поток, который занимает монитор
+
+https://cdn.javarush.com/images/comment/0085a60a-91b4-4219-9050-5fc9066fb3ec/original.jpg
+
+недетерминированности
+
+
+
+
+
 
 
 
