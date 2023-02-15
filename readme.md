@@ -57,7 +57,7 @@ executorService.shutdown();
 **2.8 Поточная синхронизация(Thread Synchronization)** <br />
 **Поточная синхронизация(Thread Synchronization)** - блок, с помощью которого, можно ограничить доступ к ресурсу или к блоку кода только для 1-го потока(Thread) <br />
 
-**Пример поточной синхронизации с помощью метода** <br />
+**Пример поточной синхронизации с помощью метода**
 ```java
 synchronized void deposit(int amount){
     for (int i = 1; i <= amount; i++) {  
@@ -216,7 +216,7 @@ public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 
 **2.12 Мониторы(Monitor)** <br />
 **Мониторы(Monitor)** - необходим для мониторинга доступа к ресурсу только одним Thread, синхронизация базируется на Monitor.
-![header](text=Hello%World!&fontColor=d6ace6)
+![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontColor=d6ace6)
 
 **Примечания**
 Каждый Thread неявно владеет одним монитором<br />
