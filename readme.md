@@ -217,11 +217,7 @@ public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 **2.12 Мониторы(Monitor)** <br />
 **Мониторы(Monitor)** - необходим для мониторинга доступа к ресурсу только одним Thread, синхронизация базируется на Monitor.
 
- <h1 style="color:purple;">Hello World</h1>
- <style>
-b{color:Blue !important;}
-
-</style>
+ <h1 style="color:red;">Hello World</h1>
 
 **Примечания**
 Каждый Thread неявно владеет одним монитором<br />
