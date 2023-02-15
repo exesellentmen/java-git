@@ -53,7 +53,104 @@ for(int n = 0; n < 40; n++){
 }
 executorService.shutdown();
 ```
- <br /> 
+
+**2.8 Поточная синхронизация(Thread Synchronization)** <br />
+**Поточная синхронизация(Thread Synchronization)** - блок, с помощью которого, можно ограничить доступ к ресурсу или к блоку кода только для 1-го потока(Thread) <br />
+
+**Пример поточной синхронизации с помощью метода** <br />
+```java
+synchronized void deposit(int amount){
+    for (int i = 1; i <= amount; i++) {  
+        System.out.println(i); 
+    }  
+}
+```
+
+**Пример поточной синхронизации с помощью блока** <br />
+```java
+synchronized (this) {//synchronized block  
+    for (int i = 1; i <= this.amount; i++) {  
+        System.out.println(i); 
+    }   
+}  
+```
+
+**2.9 Межпотоковое общение Cooperation (interthread communication)** <br />
+**Межпотоковое общение Cooperation (interthread communication)** - позволяет общаться между потоками. В данном случае поток приостанавливается и другой поток может войти в эту секцию <br />
+
+**2.10 Semaphore(Симафор)** <br />
+**Semaphore(Симафор)** - инструмент для ограничения доступа к ресурсом n-ым количеством потоков, т е одновременно с ресурсом может работать n-ое количество потоков, в то же время может использоваться как thread pool <br />
+
+**Отличия от thread pool** - Thread pool ограничивает одновременное выполнение потоков(Threads) по типу воркеров, которые работают над очередью, а Semaphore может ограничить выполнение определенного участка кода потока, например выполнить скрипт фильтрации, и применение изменения(например добавление префикса) могут все потоки, а вот участок сохранения в базу данных ограничить только n-м количеством потоков.
+
+**Параметры:**
+```java
+new Semaphore(8); // Количество потоков которым разрешаем доступ 8
+semaphore.acquire(); // Занимаем потоком участок кода
+semaphore.release(); // Освобождаем потоком участок кода
+```
+
+**Пример:**
+Задача получить список студентов и добавить им префикс, в этом случае создаем 40 потоков но выполняется только 8, например мы можем ограничить количество подключений к БД и так далее в участве
+```java
+semaphore.acquire();
+//Здесь указываем код, доступ к выполнению которого ограничен Симафором
+//...
+semaphore.release();
+```
+
+**Пример:**
+
+```java
+public String multithreadingSemaphore(){
+	//Устанавливаем параметры
+	Semaphore semaphore = new Semaphore(8); // Создаем симафор с 8 потоками
+    // Получаем список студентов
+	ArrayList<Student> students = (ArrayList<Student>) this.studentRepository.findAll();
+
+	for(int n = 0; n < 40; n++) {
+		Thread thread = new Thread(){
+        	public void run(){
+        		try {
+					semaphore.acquire(); // Участок в который могут заходить 8 потоков
+
+					List<Student> studentsThread = students.stream()
+                                .skip(1000 * n)
+                                .limit(1000)
+                                .peek(bIblockElement -> bIblockElement.setName(bIblockElement.getName() + " prefix1"))
+                                .collect(Collectors.toList());
+                    studentRepository.saveAll(studentsThread);
+
+					semaphore.release(); // Освобождение ресурса потоком
+				} catch (InterruptedException e) {
+                        System.out.println("We already have very many threads for executing");
+                }
+			}
+	    }
+    }
+}
+```
+
+**2.11 Мьютекса(MUTual EXclusion - взаимное исключение)** <br />
+**Мьютекса(MUTual EXclusion - взаимное исключение)** - обеспечить такой механизм, чтобы доступ к объекту в определенное время был только у одного потока.<br /> 
+Популярной аналогией мьютекса в реальной жизни можно считать «пример с туалетом».<br />
+Замок на двери туалета — роль мьютекса, а очередь из людей снаружи — роль потоков <br />
+
+**Примечания:**
+* мьютекс есть у каждого объекта java<br />
+* на самом деле мьютекс это одноместный Semaphore<br />
+
+**Способы:**
+Способ 1
+```java
+Synchronized(some object) // дает доступ к объекту
+```
+Способ 2
+```java
+synchronized return_type MethodName(parameters) {
+  ...
+}
+```
 
 
 
@@ -63,11 +160,7 @@ executorService.shutdown();
 
 
 
-
-
-
-
- <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br />
 
 
 
