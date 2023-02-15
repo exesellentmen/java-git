@@ -216,7 +216,7 @@ public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 
 **2.12 Мониторы(Monitor)** <br />
 **Мониторы(Monitor)** - необходим для мониторинга доступа к ресурсу только одним Thread, синхронизация базируется на Monitor.
-![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontColor=d6ace6)
+![header](text=Hello%World!&fontColor=d6ace6)
 
 **Примечания**
 Каждый Thread неявно владеет одним монитором<br />
