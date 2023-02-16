@@ -506,6 +506,221 @@ https://cdn.javarush.com/images/comment/0085a60a-91b4-4219-9050-5fc9066fb3ec/ori
 
 недетерминированности
 
+**2.17 Состояния потока(states of thread)** <br />
+**Состояния потока(states of thread):** <br />
+- new - при создании нового thread но до его запуска с помощью start() <br />
+- runnable - после запуска start но планировщик(scheduler) еще не выбрал его для выполнения <br />
+- running - когда thread начал выполняться <br />
+- Non-Runnable (Blocked) - если thread заблокирован для выполнения <br />
+- Terminated - завершение, когда thread завершил свое выполнение <br />
+
+**Способы создания потока:** <br />
+1 Создать класс расширенный от класа Thread и реализовать метод run() <br />
+2 Создать класс реализующий интерфейс Runnable <br />
+
+
+**Методы для Thread:**
+```java
+Thread.sleep(1000); // ожидание 1 секунда, если thread спит планировщик берет другой поток и работает с ним 
+t1.join();  // Для ожидания завершения потока, пока поток не выполнится следующие не запустятся
+Thread t = Thread.currentThread();  // Получаем текущий thread внутри метода
+Thread.getName(); // возвращает имя thread
+Thread.setName(String name); // Устанавливает имя для thread
+Thread.currentThread().getPriority(); // получить приоритетность thread
+s.setPriority(8);  // Установить приоритетность thread
+
+try {  
+    t1.join();  
+} catch (Exception e) {  
+    System.out.println(e);  
+}  
+```
+
+**Примечания:**
+- Thread не может быть запущен 2 раза, после первого запуска второй раз будет выводить исключение
+- Если запустить поток через run а не через start тогда наша программа будет выполняться не в многопоточном режиме а последовательно
+
+
+### 3 Примеры многопоточности:
+
+**3.1 Создать класс расширенный от класа Thread и реализовать метод run()** <br />
+
+```java
+public class ThreadConstructor extends Thread {  
+    public void run() {  
+        System.out.println("This is example of Thread Constructor");  
+    }  
+  
+    public static void main(String args[]) {  
+        ThreadConstructor t = new ThreadConstructor();  
+        t.start();  
+    }  
+} 
+```
+
+
+**3.2 Создать класс реализующий интерфейс Runnable** <br />
+
+```java
+public class ThreadConstructor2 implements Runnable {  
+  
+    public void run() {  
+        System.out.println("This is the example of Thread(Runnable target) constructor");  
+    }  
+  
+    public static void main(String args[]) {  
+        ThreadConstructor2 s = new ThreadConstructor2();  
+        Thread t = new Thread(s);  
+        t.start();  
+    }  
+} 
+```
+
+**3.3 Как запустить поток в анонимном классе(Anonymous class) через Thread** <br />
+
+Более длинный вариант
+```java
+Thread t2 = new Thread() {  
+    public void run() {  
+        System.out.println("Task two is start now...");  
+    }  
+};  
+
+t2.start(); 
+```
+Более короткий вариант
+```java
+new Thread() {  
+    public void run() {  
+        c.withdraw(15000);  
+    }  
+}.start();
+```
+
+**3.4 Как запустить поток в анонимном классе(Anonymous class) через Runnable** <br />
+т е мы не создаем отдельный класс для выполнения кода
+
+```java
+Runnable r1 = new Runnable() {  
+    public void run() {  
+        System.out.println("Task one is start now...");  
+    }  
+};  
+Thread t1 = new Thread(r1);  
+t1.start();  
+```
+
+**3.5 Создание пула threads** <br />
+
+```java
+import java.util.concurrent.ExecutorService;  
+import java.util.concurrent.Executors;  
+  
+public class ThreadPoolTest {  
+    public static void main(String[] args) {  
+        ExecutorService e = Executors.newFixedThreadPool(3);//creating a pool of 3 threads  
+        for (int i = 0; i <= 6; i++) {  
+            Runnable t = new ThreadPoolExample("" + i);  
+            e.execute(t);  
+        }  
+        e.shutdown();  
+        while (!e.isTerminated()) {  
+        }  
+        System.out.println("All threads are finish");  
+    }  
+} 
+```
+
+**3.6 Создание группы потоков в одном классе** <br />
+Описание
+
+```java
+public class ThreadGroupExample implements Runnable {  
+    public void run() {  
+        System.out.println(Thread.currentThread().getName());  
+    }  
+  
+    public static void main(String[] args) {  
+        ThreadGroupExample obj = new ThreadGroupExample();  
+        ThreadGroup tg = new ThreadGroup("Main ThreadGroup");  
+        Thread t1 = new Thread(tg, obj, "thread1");  
+        t1.start();  
+        Thread t2 = new Thread(tg, obj, "thread2");  
+        t2.start();  
+        Thread t3 = new Thread(tg, obj, "thread3");  
+        t3.start();  
+        System.out.println("Name of ThreadGroup : " + tg.getName());  
+        tg.list();  
+    }  
+}  
+```
+
+**3.7 Многопоточность через аннотации Async для методов** <br />
+
+```java
+// Класс AsyncTester.java:
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+@Configuration
+@EnableAsync
+public class AsyncTester {
+    @Async
+    public void saveTest(int i) throws InterruptedException {
+        Thread.sleep(1000 - i*100);
+        System.out.println(i);
+    }
+}
+
+// Пример использования:
+@Autowired
+ApplicationContext context;
+
+// Тестирую асинхронность и многопоточность через аннотацию @Async
+@GetMapping("/async")
+public String mathodeAsync() throws InterruptedException {
+    AsyncTester asyncTester = this.context.getBean(AsyncTester.class);
+    for (int i = 1; i < 10; i++){
+            asyncTester.saveTest(i);
+    }
+    return "test";
+}
+```
+**Результат в обратном порядке:**
+10<br />
+9<br />
+8<br />
+7<br />
+6<br />
+5<br />
+4<br />
+3<br />
+2<br />
+1<br />
+
+
+
+ 
+
+**3.8 Работа с Thread через лямбду** <br />
+
+```java
+Thread threadA = new Thread(() -> {
+    // Some code....
+});
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
