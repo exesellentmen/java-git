@@ -885,6 +885,7 @@ fields[1].setAccessible(true);
 fields[0].setInt(testObject,3);
 ```
 
+<br />
 
 **4.6 clone()** - метод объекта Object, создание клона объекта<br />
 
@@ -991,6 +992,7 @@ class TestDeep2 implements Cloneable {
 }
 ```
 
+<br />
 
 **4.7 wait(), notify() notifyAll() methods** - методы объекта Object, все эти методы вызываются только из синхронизированного контекста - синхронизированного блока или метода.<br />
 
