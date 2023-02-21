@@ -632,7 +632,6 @@ public class ThreadPoolTest {
 ```
 
 **3.6 Создание группы потоков в одном классе** <br />
-Описание
 
 ```java
 public class ThreadGroupExample implements Runnable {  
@@ -724,8 +723,307 @@ Thread threadA = new Thread(() -> {
 - wait(), notify() notifyAll() methods - методы для работы с многопоточностью
 
 
+**Описание:**
 
 
+**4.1 toString() method** - метод объекта Object, который возвращает строковое представление объекта по умолчанию это: <br />
+Полный адрек класса + @ + беззнаковое шаснадцетиричное представление hashCode<br />
+com.paul.startclass.TestObject@21d6dc81
+
+Алгоритм создания строки
+```java
+getClass().getName() + "@" + Integer.toHexString(hashCode());
+```
+т е toString вызывает хеш код по умолчанию
+
+**4.2 hashCode() method** - метод объекта Object, Возвращает хеш код объекта, как правило для того чтобы можно было быстро сравнивать объекты, обычно это сумма всех свойств переведенные в формат int умноженное на нечетное число 31 или 29 в промежуточных операциях.<br />
+
+**По умолчанию возвращает:** - идентификационный хеш (identity hash code), скрипт получения которого является nativ, нативным, написан на другом языке. для его получения в случае переопределения используется 
+
+```java
+System.identityHashCode(o)
+```
+
+Пример генерации hashCode:
+```java
+@Override
+public int hashCode() {
+    int result = model == null ? 0 : model.hashCode();
+    result = 31 * result + this.maxSpeed;
+    result = 31 * result + this.size;
+    return result;
+}
+```
+
+**4.3 equals()** - метод объекта Object,сравнение по состоянию объектов (т е соответствуют ли свойства 1-го объекта другому), тогда как оператор (equel singns) == проверяет ссылаются ли переменные на один и тот же объект. <br />
+
+**Источник:**
+https://javarush.com/groups/posts/equals-java-sravnenie-strok <br />
+https://javarush.com/groups/posts/2179-metodih-equals--hashcode-praktika-ispoljhzovanija <br />
+
+
+**Требования equals**
+- Рефлексивность. Если один и тот же объект, то получаем true
+- Симметричность. Объекты должны быть равны друг другу симметрично.  Как 
+a.equals(b) = true => b.equals(a) = true
+- Транзитивность. Если 2 объекта равны 3-му то и между сабой они тоже должны быть равны
+(a.equals(c) = true, b.equals(c) = true) => a.equals(b) = true
+- Постоянность. Результат должен зависить только от входящих аргументов, а не от сторонних значений
+- Неравенство с null. Любой объект не должен быть равен null
+
+**Примечания**
+- equals метод класса Object и изначально его механизм такой же как и оператора (equals signs) ==, но для работы его нужно переопределить в созданном классе
+
+**Пример написания метода:**
+```java
+@Override
+public boolean equals(Object o){
+    if (this == o) return true; // Проверяем, может это один и тот же объект
+    if (o == null || getClass() != o.getClass()) return false; // проверяем соответствует ли класс и то что объект не равен null
+    Car that = (Car) o;
+    if (this.maxSpeed != that.maxSpeed) return false;
+    return (this.model.equals(that.model)) ;
+}
+```
+
+**Пример использования кода:**
+```java
+class Car{
+    public String model;
+    public int maxSpeed;
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true; // Проверяем, может это один и тот же объект
+        if (o == null || getClass() != o.getClass()) return false; // проверяем соответствует ли класс и то что объект не равен null
+        Car that = (Car) o;
+        if (this.maxSpeed != that.maxSpeed) return false;
+        return (this.model.equals(that.model)) ;
+    }
+}
+
+@SpringBootApplication
+public class EqualsApplication {
+    public static void main(String[] args){
+        Car car1 = new Car();
+        car1.model = "Ferrari";
+        car1.maxSpeed = 300;
+
+        Car car2 = new Car();
+        car2.model = "Ferrari";
+        car2.maxSpeed = 300;
+
+        System.out.println(car1 == car2); // Результат false
+        System.out.println(car1.equals(car2)); // Результат equals true
+    }
+}
+```
+
+**4.4 finalize() method** - метод объекта Object, данный метод используется очень редко т к у него есть много ньансов, а вызывается он когда объект освобождается и становится доступным для утилизации с помощью garbage collector<br />
+
+**Примечания**
+- Данный метод не обязательно будет вызван, например в случае выключения программы
+- Его можно вызывать для высвобождения служебных систем, например закрыть подключение к БД внутри объекта
+- Еще один минус в том что если метод реализован, то объект не утилизируется сразу а встает в очередь на утилизацию, где занимает ресурсы
+- Лучше использовать другие методы для обработки высвобождения объекта
+- Исключения, которые будут вызваны этим методом не будут обработаны
+
+**4.5 getClass() method** - метод объекта Object, возвращает экземляр класса Class, который содержит информацию о классе на основе которого был создан объект из которого был вызван метод getClass().
+Необходим в случае разработки библиотек или например контейнеров зависимостей<br />
+
+
+**class Class** - это класс, который позволяет возвращать различные данные о классе, такие как:
+- имя класса
+```java
+classTest.getSimpleName();
+```
+- полное имя класса
+```java
+classTest.getName();
+```
+- набор методов
+```java
+classTest.getMethods();
+try {
+    Method setName = classTest.getMethod("setName", String.class);
+} catch (NoSuchMethodException e) {
+    e.printStackTrace();
+}
+```
+- набор свойств
+- интерфейсы, которые он реализует
+- супер классы (родительские классы)
+
+
+**class Field** - это класс, который позволяет работать со свойством класса и с объектами, которые принадлежат данному классу. Позволяет проводить такие действия как:
+- получение Fields из объекта
+```java
+Field fields = testObject.getClass().getDeclaredFields();
+```
+- получать или устанавливать значения для свойств объекта
+```java
+String name = (String) fields[0].get(testObject);
+String name = (String) fields[0].set(testObject, "test value");
+```
+- узнавать доступно ли свойство для редактирования
+```java
+boolean accessField = fields[1].canAccess(testObject);
+```
+- изменять доступность свойств, например с private на public и обратно
+```java
+fields[1].setAccessible(true);
+```
+- устанавливать значения в случаи примитивных значений свойства
+```java
+fields[0].setInt(testObject,3);
+```
+
+
+**4.6 clone()** - метод объекта Object, создание клона объекта<br />
+
+**Источник:**
+https://www.techiedelight.com/ru/clone-method-in-java/
+
+**Примечание:**
+- В Java мы присваеваем не объект, а ссылку на него, чтобы создать копию необходимо пользоваться механизмом clone()
+- Все объекты, которые мы можем клонировать должны реализовывать Cloneable интерфейс и метод clone() должен возвращать объект типа Object
+- При клонировании объекты также должны внутри вызывать метод super.clone(), чтобы клонировать состояние родителя тоже
+- Есть мелкое и глубокое копирование (Deep and Shallow Copy)
+- Если мы имеем поле с непримитивным типом, мы должны его создать по умолчанию
+Test c = new Test();
+
+Синтаксис
+```java
+protected Object clone() throws CloneNotSupportedException // метод clone
+```
+**Shallow copy(Поверхностного копирования)** - выводит только копию объекта но не копирует ссылочные типы внутри объекта. т е Если у нас есть свойство типом объект, то объект будет тот же мы скопируем только ссылку на него
+
+Пример Shallow copy(Поверхностного копирования):
+```java
+@SpringBootApplication
+public class CloneApplication {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(StartclassApplication.class, args);
+
+        Test2 t1 = new Test2();
+        t1.a = 10;
+        t1.b = 20;
+        t1.c.x = 30;
+        t1.c.y = 40;
+
+        Test2 t2 = (Test2)t1.clone();
+
+        t2.c.x = 999;
+
+        System.out.println("Test");
+
+    }
+}
+
+class Test {
+    int x, y;
+}
+
+class Test2 implements Cloneable {
+    int a;
+    int b;
+    Test c = new Test();
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
+}
+```
+
+**Пример Deep copy(Поверхностного копирования)** - намного сложнее Shallow Copy потому что необходимо копировать все вложенные объекты всех уровней.
+Глубокое клонирование включает рекурсивное копирование всех изменяемых типов.
+Иногда для этих задач используют сериализацию и специальные библиотеки Apache Commons Ланг
+
+**Пример Deep Copy(Глубокого копирования):**
+```java
+@SpringBootApplication
+public class DeepCloneApplication {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(StartclassApplication.class, args);
+
+        TestDeep2 t1 = new TestDeep2();
+        t1.a = 10;
+        t1.b = 20;
+        t1.c.x = 30;
+        t1.c.y = 40;
+
+        TestDeep2 t3 = (TestDeep2)t1.clone();
+        t3.a = 100;
+
+        t3.c.x = 300;
+
+        System.out.println("Test");
+
+    }
+}
+
+class TestDeep {
+    int x, y;
+}
+
+class TestDeep2 implements Cloneable {
+    int a, b;
+
+    TestDeep c = new TestDeep();
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        TestDeep2 t = (TestDeep2)super.clone();
+
+        t.c = new TestDeep();
+        t.c.x = c.x;
+        t.c.y = c.y;
+
+        return t;
+    }
+}
+```
+
+
+**4.7 wait(), notify() notifyAll() methods** - методы объекта Object, все эти методы вызываются только из синхронизированного контекста - синхронизированного блока или метода.<br />
+
+
+Данные методы нужны когда мы синхронизируемся с определенным объектом 
+objectTest.wait() - Останавливает текущий поток в блоке synchronized (objectTest), и передает инициативу другим, пока не будет вызван objectTest.notify(); или objectTest.notifyAll();
+
+```java
+package com.paul.startclass;
+
+public class ThreadApplication {
+    public static void main(String[] args) {
+        String test = "111";
+        Thread th = new Thread(() -> {
+            ThreadApplication.testMethode(test);
+        });
+        th.start();
+
+        Thread th1 = new Thread(() -> {
+            ThreadApplication.testMethode(test);
+        });
+        th1.start();
+    }
+
+    public static void testMethode(String testStr){
+        synchronized (testStr){
+            for(int i = 0; i<10; i++){
+                if(i == 5) {
+                    testStr.notify();
+                    try {
+                        testStr.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println(Thread.currentThread().getName() + " "+ i);
+            }
+        }
+    }
+}
+```
 
 
 
