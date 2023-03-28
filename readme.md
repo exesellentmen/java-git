@@ -1166,7 +1166,7 @@ https://dz2cdn1.dzone.com/storage/temp/13795578-java-collection-framework-hierar
 https://book.huihoo.com/oreilly/java/fclass/figs/jfc_1701.gif
 
 
-**5) Все классы и интерфейсы**
+**5) Все классы и интерфейсы.**
 
 Iterable<T> - интерфейс <br />
     Iterator<T> - интерфейс <br />
