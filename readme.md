@@ -1147,9 +1147,141 @@ public class ThreadApplication {
 
 
 
+### 5. Колекции и Map
+
+**1) java.util** - коллекции и структуры данных
+
+**2) Источники:**
+- https://it.wikireading.ru/32696
+- https://www.bestprog.net/ru/2022/03/23/java-introduction-to-java-collections-framework-ru/#q03
+- https://java-online.ru/java-util.xhtml
+
+**3) Картинка:**
+https://storage.yandexcloud.net/wr4img/376517_15_14-1.png
+
+
+**4) Типы структур:**
+https://i.pinimg.com/originals/c8/c4/66/c8c466b3cfb59a2a209e59c2972db3c0.png
+https://dz2cdn1.dzone.com/storage/temp/13795578-java-collection-framework-hierarchy.jpg
+https://book.huihoo.com/oreilly/java/fclass/figs/jfc_1701.gif
+
+
+**5) Все классы и интерфейсы**
+
+Iterable<T> - интерфейс <br />
+    Iterator<T> - интерфейс <br />
+        ListIterator<T> - интерфейс <br />
+    Collection<T> - интерфейс <br />
+        List<T> - интерфейс <br />
+            ArrayList<T> - класс <br />
+            LinkedList<T> - класс <br />
+            Vector(sync) - класс <br />
+                Stack - класс <br />
+        Set<T> - интерфейс <br />
+            HashSet - класс <br />
+            LinkedHashSet - класс <br />
+            SortedSet<T> - интерфейс <br />
+                TreeSet(SortedSet) - класс <br />
+                NavigableSet<T> - интерфейс <br />
+        Queue<T> - интерфейс <br />
+            PriorityQueue - класс <br />
+            Deque<T> - интерфейс <br />
+                ArrayDeque(Deque) - класс <br />
+                LinkedList(Deque) - класс <br />
+ <br />
+Map<K,V> - интерфейс <br />
+    SortedMap<K,V> - интерфейс <br />
+        NavigableMap<K,V> - интерфейс <br />
+            HashMap - класс <br />
+            HashLinkedMap - класс <br />
+            HashTable(sync) - класс <br />
+            TreeMap(SortedMap) - класс <br />
+
+Краткое описание
+https://www.youtube.com/watch?v=0sWpjUvbGcQ
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+**Описание:**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**4.5 getClass() method** - метод объекта Object, возвращает экземляр класса Class, который содержит информацию о классе на основе которого был создан объект из которого был вызван метод getClass().
+Необходим в случае разработки библиотек или например контейнеров зависимостей<br />
+
+
+**class Class** - это класс, который позволяет возвращать различные данные о классе, такие как:
+- имя класса
+```java
+classTest.getSimpleName();
+```
+- полное имя класса
+```java
+classTest.getName();
+```
+- набор методов
+```java
+classTest.getMethods();
+try {
+    Method setName = classTest.getMethod("setName", String.class);
+} catch (NoSuchMethodException e) {
+    e.printStackTrace();
+}
+```
+- набор свойств
+- интерфейсы, которые он реализует
+- супер классы (родительские классы)
+
+
+**class Field** - это класс, который позволяет работать со свойством класса и с объектами, которые принадлежат данному классу. Позволяет проводить такие действия как:
+- получение Fields из объекта
+```java
+Field fields = testObject.getClass().getDeclaredFields();
+```
+- получать или устанавливать значения для свойств объекта
+```java
+String name = (String) fields[0].get(testObject);
+String name = (String) fields[0].set(testObject, "test value");
+```
+- узнавать доступно ли свойство для редактирования
+```java
+boolean accessField = fields[1].canAccess(testObject);
+```
+- изменять доступность свойств, например с private на public и обратно
+```java
+fields[1].setAccessible(true);
+```
+- устанавливать значения в случаи примитивных значений свойства
+```java
+fields[0].setInt(testObject,3);
+```
+
+<br />
 
 
 
