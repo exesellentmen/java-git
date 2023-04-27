@@ -2527,55 +2527,6 @@ void transferQueueTest() throws InterruptedException {
 
 
 
-=========================================
-
-
-**5. Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
-
-**Методы:**<br />
-- обход массивов(iterator.next()), <br />
-- проверка есть ли следующий элемент(iterator.hasNext()), <br />
-- более лаконичный обход массивов(iterator.forEachRemaining((element) -> {System.out.println(element);}))<br />
-- удаление текущего элемента(iterator.remove())<br />
-
-**Пример:**<br />
-```java
-//Interface Iterator - необходим для обхода массива, получение следующего элемента, или определение есть ли следующий
-//Interface Iterator - requiered for collection traversing, getting a next element, checking if there is a next element, deleting a curent element
-@Test
-void iteratorInterface() {
-    ArrayList<String> arrayList = new ArrayList<>();
-    arrayList.add("1");
-    arrayList.add("2");
-    arrayList.add("3");
-
-    Iterator<String> iterator = arrayList.iterator();
-
-    //Проверяем есть ли следующий элемент(Checking, if there is the next element )
-    boolean hasNext = iterator.hasNext(); // true
-
-    //Мы получаем следующий элемент(Getting the next element)
-    String str = iterator.next(); // 1
-
-    iterator.next();
-
-    // Удаляет текущий элемент, в данный момент 2ой, также и в самой коллекции ArrayList(Deleting the current element)
-    iterator.remove(); // iterator = {"1", "3"}
-
-    // Обход элементов массива более лаконичным способом(more convenient array traversing)
-    arrayList.iterator().forEachRemaining((element) -> {
-        System.out.println(element);
-    });
-}
-```
-
-
-
-
-
-
-
-
 
 
 
