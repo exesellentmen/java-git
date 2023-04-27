@@ -1403,11 +1403,518 @@ indexof(x) - поиск элемента по значению, необходи
 clear() - очистить, необходимо удалять каждый элемент<br />
 remove(x) - необходимо найти элемент, а потом уменьшить размер, обойдя все элементы<br />
 remove(i) - необходимо удалить, а потом перебрать все элементы для уменьшения размера<br />
+<br />
+
+
+**5.11 LinkedList<T>** - это реализация двусвязного списка / очереди<br />
+состоит на основе ссылок, каждый элемент содержит значение и ссылку на следующий элемент<br />
+Редкие ситуации когда можно использовать.<br />
+В основном когда нужно удалять элементы из середины списка, т к в ArrayList приходиьтся смещать все элементы<br />
+
+**Решение для ArrayList:**<br />
+Записывал вместо удаления null, а в конце просто убрал бы все null элементы или при итерировании игнорировал бы null значения.
+Еще выгодно когда можно использовать Iterator
+
+**Временая сложность LinkedList (Time complexity for LinkedList):**<br />
+O(1) - Постоянное количество времени (Constant Time):<br />
+add(e) - добавление элемента в конец списка<br />
+remove(i) - удаление<br />
+O(n) - Линейное время (Linear time):<br />
+get(i) - получение элемента, в среднем = n/4, нужно обойти все элементы<br />
+add(i, e) - добавление элемента в середину, в среднем = n/4<br />
+remove(e) - удаление, нужно обойти все элементы, в среднем = n/4<br />
+remove(i) - удаление, нужно обойти все элементы, в среднем = n/4<br />
+contains(e) -нужно обойти все элементы<br />
+indexof(x) - поиск элемента по значению, необходимо проверять весь массив<br />
+
+**Пример работы с LinkedList:**
+```java
+// Список
+@Test
+void linkedListTest() {
+    LinkedList<String> linkedList = new LinkedList<>(Arrays.asList("1", "2", "3", "4", "5", "3"));
+
+    // Итератор в обратном порядке
+    Iterator<String> iterator = linkedList.descendingIterator(); //Iterator {"3","5","4"..}
+
+    linkedList.addFirst("11"); // Добавление в начало, выгода в том что добавляет только 1 ссылку
+    linkedList.addLast("22"); //Добавляет в конец без ссылки
+
+    String element = linkedList.element(); // Получение текущего элемента
+
+    // Получение первого и последнего элемента
+    String first = linkedList.getFirst();
+    String last = linkedList.getLast();
+
+    linkedList.offer("1"); // добавление элемента в конец при этом возвращает bool
+    linkedList.offerLast("2"); // добавление элемента в конец списка при этом возвращает bool
+    linkedList.offerFirst("22"); // добавление элемента в начало списка при этом возвращает bool
+}
+```
+<br />
+
+
+
+**5.12 Сравнение LinkedList и ArrayList** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
+
+
+**Заключение: более выгодно использовать ArrayList:**<br />
+- добавление в середину списка время в обоих случаях O(n), к тому же метод добавления у ArrayList nativ, который компенсирует скорость чтения у LinkedList<br />
+- удаление из середины быстрее у LinkedList, но можно ускорить ArrayList, если не удалять, а присваивать Null, а потом их игнорировать, или удалять все null в конце цикла например<br />
+
+**Описание и источники:**<br />
+https://2.bp.blogspot.com/-dFutRoKLpfw/V5Pf3VMjSZI/AAAAAAAAmQ4/HEHCWd9vtzICTy0IDSSMKw1kAKCs0yt2gCLcB/s1600/Image%2B687.png
+https://rukovodstvo.net/posts/id_776/<br />
+
+
+**LinkedList выгодно использовать:**<br />
+- для удаления элемента из середины<br />
+- для вставки элемента в середину(Хотя по некоторым исслодованием можно увидеть обратное т к операция nativ для ArrayList и она происходит быстрее)
+https://habr.com/ru/post/262943/<br />
+
+**В остальных случаях ArrayList**
+
+https://rukovodstvo.net/posts/id_776/
+
+**Заключение**<br />
+ArrayList и LinkedList - две разные реализации интерфейса List У них есть свои различия, которые важно понимать, чтобы правильно их использовать.<br />
+
+Какую реализацию следует использовать, зависит от конкретных вариантов использования. Если элементы будут извлекаться часто, не имеет смысла использовать LinkedList поскольку выборка выполняется медленнее по сравнению с ArrayList . С другой стороны, если требуются вставки с постоянным временем или если общий размер заранее неизвестен, предпочтительнее использовать LinkedList<br />
+<br />
+
+
+
+
+**5.13 Stack(стек)** - структура данных подобна магазину в пистолете, первый зашел последним выйдет.
+
+**Места применения:**
+- например для кнопки назад в браузере<br />
+- может потребоваться при написании алгоритмов для задачик<br />
+- например при создании карточной игры<br />
+
+**Пример:**
+```java
+// Стек
+@Test
+void stackTest() {
+    Stack<String> stack = new Stack<>();
+    stack.addAll(Arrays.asList("1", "2", "3", "4", "5", "3"));
+
+    stack.push("1"); // Добавить элемент вверх стека
+
+    String pop = stack.pop(); // получить верхний элемент стека и удалить его из стека
+
+    String peek = stack.peek(); //Вернуть верхний элемент стека но не удалять его
+}
+```
+
+
+**5.14 Vector(sync)** - класс, структура данных, хранит данные линейно, как и массивы, которая позволяет эффективно изменять размер структуры данных во время выполнения программы. Похож на ArrayList, но имеет несколько отличий
+
+**Отличия Vector перед ArrayList:**<br />
+- Vector - синхронизируется, т е в один момент времени к Vector имеет доступ только один поток, что позволяет не поврежать данные<br />
+- Увеличение емкости, Vector удваивает свой размер, ArrayList увеличивает в полтора раза<br />
+- Vector имеет Enumeration в отличие от ArrayList(Преимущества Enumeration: синхронизированы, элементы в колекции защищены, не удаляются, не заменяются и не добавляются, )<br />
+- Vectore имеет устаревшие функции, которые есть только в Vectore<br />
+
+**Пример работы:**
+```java
+// Vector
+@Test
+void vectorTest(){
+    Vector<String> vector = new Vector<>(List.of("1","2","3","4","5"));
+
+    // Размер Vector
+    int capacity = vector.capacity();
+
+    // Удаляет лишнюю емкость, сохраняет место только для текущих элементов
+    vector.trimToSize();
+
+    // Получение Enumeration
+    Enumeration<String> elements = vector.elements();
+
+    // Увеличение емкости на 22 позиции
+    vector.ensureCapacity(22);
+
+    //Фиксирует размер Vectore, при этом лишние элементы удаляет, а если больше элементов, заполняет их null
+    vector.setSize(5);
+
+    // Возвращает массив элементов из Vectore
+    String[] objects = (String[]) vector.toArray();
+
+}
+```
+
+
+
+**5.15 ListIterator** - расширенная структура данных от iterator.
+
+**Отличия от Iterator:**<br />
+- Vector - синхронизируется, т е в один момент времени к Vector имеет доступ только один поток, что позволяет не поврежать данные<br />
+- Увеличение емкости, Vector удваивает свой размер, ArrayList увеличивает в полтора раза<br />
+- Vector имеет Enumeration в отличие от ArrayList(Преимущества Enumeration: синхронизированы, элементы в колекции защищены, не удаляются, не заменяются и не добавляются, )<br />
+- Vectore имеет устаревшие функции, которые есть только в Vectore<br />
+
+**Примечания:**<br />
+- listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам List<br />
+
+
+**Пример работы:**
+```java
+// listIterator
+@Test
+public void listIteratorTest(){
+    ArrayList<String> arrayList = new ArrayList<>(List.of("1","2","3","4","5"));
+
+    ListIterator<String> listIterator = arrayList.listIterator();
+
+    // listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам ArrayList
+    listIterator.next();
+    listIterator.remove();
+
+    // listIterator переход к следующего/предыдущего
+    listIterator.next();
+    listIterator.previous();
+
+    // listIterator проверка существование следующего/предыдущего
+    boolean hasNext = listIterator.hasNext();
+    boolean hasPrevious = listIterator.hasPrevious();
+
+    // listIterator получение индекса следующего/предыдущего
+    int nextIndex = listIterator.nextIndex();
+    int previousIndex = listIterator.previousIndex();
+
+    // listIterator обход всех элементов и их изменение
+    listIterator.forEachRemaining(e -> e = e + "prefix");
+
+
+    //Проверка CRUD
+
+    // Добавление элемента
+    ListIterator<String> listIterator1 = Arrays.asList("1","2","3","4","5").listIterator();
+    listIterator1.add("6");
+
+    // Удаление элемента
+    ListIterator<String> listIterator2 = Arrays.asList("1","2","3","4","5").listIterator();
+    while (listIterator2.hasNext()){
+        if(listIterator2.next().equals("3")){
+            listIterator2.remove();
+            break;
+        }
+    }
+
+    // Изменение элемента
+    ListIterator<String> listIterator3 = Arrays.asList("1","2","3","4","5").listIterator();
+    while (listIterator3.hasNext()){
+        if(listIterator3.next().equals("4")){
+            listIterator3.set("44");
+            break;
+        }
+    }
+
+    // Чтение
+    ListIterator<String> listIterator4 = Arrays.asList("1","2","3","4","5").listIterator();
+    String read = listIterator4.next();
+    
+}
+```
+
+
+**5.15 Set** - коллекция элементов, не допускающих дублирования.
+
+**Реализации:**
+java.util.HashSet<br />
+java.util.TreeSet<br />
+java.util.LinkedHashSet<br />
+
+**Пример:**
+```java
+// Set - коллекция, список, кторая не содержит дубликаты
+@Test
+void setTest(){
+    Set<String> set = new HashSet<>();
+
+    // Попытка добавить дубли, но не получится
+    set.add("1");
+    set.add("1");
+}
+```
+<br />
+
+
+
+**5.16 HashSet** - List который не имеет дублей, при этом нету порядка элементов.
+
+**Примечания:** 
+- Предоставляет быстрый доступ к элементам, но только при условии отсутствия коллизий, когда HashCode правильно настроен и не возвращает одинаковые значения<br />
+- При этом порядка элементов нету<br />
+- В классе элементов HashSet, hashCode метод должен быть переопределен<br />
+
+Методы:<br />
+public Iterator iterator() - Получение Iterator<br />
+public int size() - размер множества<br />
+public boolean isEmpty() - проверка на пустое множество<br />
+public boolean contains(Object o) - есть ли элемент в множестве<br />
+public boolean add(Object o) - добавить элемент в множество<br />
+public boolean addAll(Collection c) - добавить элементы множества в множ.<br />
+public Object[] toArray() - преобразовать в массив<br />
+public boolean remove(Object o) - удалить элемент из множества<br />
+public boolean removeAll(Collection c) - удалить несколько элементов коллекции<br />
+public boolean retainAll(Collection c) - удалить отсутствующие элемнеты из c<br />
+public void clear() - очистить<br />
+public Object clone() - клонировать<br />
+<br />
+
+
+**5.17 LinkedHashSet**  - связанный список, который поддерживает порядок и который исключает дубли
+<br />
+
+
+
+**5.18 TreeSet** - отсортированный список, для хранения применяется дерево, объекты сохраняются в отсортированном порядке, который основан на красно-черном дереве(тип бинарных деревьев).
+
+**Источники:**
+https://www.codeflow.site/ru/article/java-tree-set
+
+**Красное-черное дерево** - это сбалансированное бинарное дерево поиска, которое имеет следующие характеристики:<br />
+- Каждый узел окрашен либо в красный, либо в черный цвет (в структуре данных узла появляется дополнительное поле – бит цвета).<br />
+- Корень окрашен в черный цвет.<br />
+- Листья(так называемые NULL-узлы) окрашены в черный цвет.<br />
+- Каждый красный узел должен иметь два черных дочерних узла. Нужно отметить, что у черного узла могут быть черные дочерние узлы. Красные узлы в качестве дочерних могут иметь только черные.<br />
+- Пути от узла к его листьям должны содержать одинаковое количество черных узлов(это черная высота).<br />
+
+**Картинка:**<br />
+https://habrastorage.org/r/w1560/web/ae2/9ed/b02/ae29edb02c724c209d25ec3ee48724f5.png
+
+**Данная балансировка позволяет выполнять операции:**<br />
+- вставки<br />
+- удаления<br />
+- выборки<br />
+за O(log n)<br />
+
+**Алгоритм заполнения красно черного дерева:**<br />
+https://habr.com/ru/post/330644/
+
+Вставка в красно-черное дерево начинается со вставки элемента, как в обычном бинарном дереве поиска. Только здесь элементы вставляются в позиции NULL-листьев. Вставленный узел всегда окрашивается в красный цвет. Далее идет процедура проверки сохранения свойств красно-черного дерева $1-5$.<br />
+
+Свойство 1 не нарушается, поскольку новому узлу сразу присваивается красный цвет.<br />
+
+Свойство 2 нарушается только в том случае, если у нас было пустое дерево и первый вставленный узел (он же корень) окрашен в красный цвет. Здесь достаточно просто перекрасить корень в черный цвет.<br />
+
+Свойство 3 также не нарушается, поскольку при добавлении узла он получает черные листовые NULL-узлы.<br />
+
+**В основном встречаются 2 других нарушения:**<br />
+
+1) Красный узел имеет красный дочерний узел (нарушено свойство $4$).<br />
+
+2) Пути в дереве содержат разное количество черных узлов (нарушено свойство $5$).<br />
+
+Подробнее о балансировке красно-черного дерева при разных случаях (их пять, если включить нарушение свойства $2$) можно почитать на wiki.<br />
+
+**Идея работы:**<br />
+В начале мы вставляем узлы в дерево, а потом оно провидит балансировку<br />
+Бинарное дерево(Red-black tree, RB tree, binary tree, B-деревьями)<br />
+TreeMap()<br />
+
+**Примечания:**<br />
+- По умолчанию сортировка производится привычным способом, но можно изменить это поведение через интерфейс Comparable.<br />
+- Реализует интерфейс: SortedSet<br />
+- TreeSet использует самобалансирующееся двоичное дерево поиска, а точнее красно-черное дерево<br />
+- несинзронизироват по дефолту, но можно синхронизировать с помощью synchronized<br />
+- TreeSet в отличие от ArrayList всегда содержит элементы в отсортированном виде<br />
+<br />
+
+**Дополнительные методы**<br />
+Кроме стандартных методов Set у интерфейса есть свои методы.<br />
+
+Comparator comparator()<br />
+subSet(Object fromElement, Object toElement)<br />
+tailSet(Object fromElement)<br />
+headSet(Object toElement)<br />
+Object first()<br />
+Object last()<br />
+
+
+**Вывод**<br />
+TreeSet является структурой данных с большей локальностью, поэтому мы можем сделать вывод в соответствии с Принципом локальности, что мы должны отдавать предпочтение TreeSet , если у нас мало памяти и если мы хотим получить доступ к элементам, которые находятся относительно близко друг другу в соответствии с их естественным порядком.<br />
+
+В случае, если данные должны быть прочитаны с жесткого диска (который имеет большую задержку, чем данные, прочитанные из кеша или памяти), тогда предпочитайте TreeSet , поскольку он имеет большую локальность<br />
 
 
 
 
 
+**5.19 Queue<T>** - интерфейс для работы с очередями, по принципу первый зашел, первый вышел<br />
+
+**Основное примечания:**
+
+**Источники:**
+https://betacode.net/13451/java-queue<br />
+https://raw.githubusercontent.com/wanglizhi/wanglizhi.github.io/master/img/2016-06-22/Java-Collections_API-Queue.jpg - полная схема интерфейсов и реализаций очередей<br />
+
+**Расширяет интерфейсы:**
+- Collection<br />
+
+**Очереди:**
+Queue
+    BlockingQueue(Interface) - заставляют потоки ожидать очереди<br />
+        LinkedBlockingQueue(LinkedBlockingDeque) - потокобезопасные<br />
+        ArrayBlockingQueue - потокобезопасные<br />
+        PriorityBlockingQueue - потокобезопасные<br />
+        DelayQueue - потокобезопасные<br />
+        SynchronousQueue - потокобезопасные<br />
+        TransferQueue(Interface)<br />
+            LinkedTransferQueue - потокобезопасные<br />
+    Deque(Interface) - как из колоды карт можно взять с начала и с конца<br />
+        ArrayDeque<br />
+		LinkedList<br />
+		ConcurrentLinkedDeque<br />
+		LinkedBlockingDeque<br />
+
+PriorityQueue<br />
+BlockingDeque<E><br />
+ArrayDeque<br />
+LinkedList<br />
+ConcurrentLinkedQueue<br />
+
+**Дополнительные вопросы:**
+FIFO
+
+**Реализации:**
+PriorityQueue - класс<br />
+Deque<T> - интерфейс<br />
+    ArrayDeque(Deque) - класс<br />
+    LinkedList(Deque) - класс<br />
+
+**Область применения очередей:**
+- Для отложенных операций, когда операции тяжеловесные и требуют много времени, а пользователь ждать не хочет, мы помещаем операцию в очередь, пока какой-нибудь worker не возьмет ее в работу<br />
+- Для обработки пиковых нагрузок, когда мы получили большой объем задач, мы можем их распределить и равномерно выполнять<br />
+- Масштабируемость, за счет этого мы можем поднять несколько сервисов, которые будут брать задачи из очереди и выполнять задачи быстрее<br />
+- Для java актуально использовать для многопоточности, когда есть очередь и несколько потоков ее обрабатывает, берут из нее задачи<br />
+
+**Заметки:**
+- Чтобы получить доступ к элементу, в начале нужно удалить его предшественников<br />
+- Элементы можно вставить куда-то в очередь, не обязательно в конец, в зависимости от типа очереди и приоритета элемента<br />
+
+**Методы:**
+boolean add(E e); // Вставляет элемент в очередь, если нет места - Exception если успех - true<br />
+boolean offer(E e); // Пытается вставить элемент в очередь если нету места и по другим причинам возвращает false<br />
+<br />
+E remove(); // Возвращает элемент и удаляет его, если элементов больше нет, возвращает исключение<br />
+E poll(); // Возвращает элемент и удаляет его, если элементов больше нет, возвращает null<br />
+<br />
+E element(); //  Возвращает элемент но не удаляет его, если элементов больше нет, возвращает исключение<br />
+E peek(); // Возвращает элемент но не удаляет его, если элементов больше нет, возвращает null<br />
+<br />
+**Основные реализации Queue:**<br />
+- LinkedList - стандартная очередь, также реализует List<br />
+- Deque - можно получить как с начала, так и с конца очереди<br />
+- PriorityQueue - очередь на основе приоритетов, сортирует элементы согласно правилу Comparator. Есть стандартная сортировка<br />
+- Concurrentlink Queue - очередь для многопоточности<br />
+- LinkedBlockingQueue - очередь для многопоточности, необязательно ограничена по размеру<br />
+- ArrayBlocking Queue - очередь для многопоточности<br />
+- SynchronousQueue - очередь для многопоточности<br />
+
+**Источник:**<br />
+https://www.baeldung.com/java-queue<br />
+https://translated.turbopages.org/proxy_u/en-ru.ru.5ee42d6e-63f9d44a-e39b2a87-74722d776562/https/www.baeldung.com/java-queue<br />
+https://www.baeldung.com/java-queue-linkedblocking-concurrentlinked<br />
+
+**Интерфейсы:**<br />
+- BlockingQueue<br />
+- TransferQueue<br />
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Отличия от Iterator:**<br />
+- Vector - синхронизируется, т е в один момент времени к Vector имеет доступ только один поток, что позволяет не поврежать данные<br />
+- Увеличение емкости, Vector удваивает свой размер, ArrayList увеличивает в полтора раза<br />
+- Vector имеет Enumeration в отличие от ArrayList(Преимущества Enumeration: синхронизированы, элементы в колекции защищены, не удаляются, не заменяются и не добавляются, )<br />
+- Vectore имеет устаревшие функции, которые есть только в Vectore<br />
+
+**Примечания:**<br />
+- listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам List<br />
+
+
+**Пример работы:**
+```java
+// listIterator
+@Test
+public void listIteratorTest(){
+    ArrayList<String> arrayList = new ArrayList<>(List.of("1","2","3","4","5"));
+
+    ListIterator<String> listIterator = arrayList.listIterator();
+
+    // listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам ArrayList
+    listIterator.next();
+    listIterator.remove();
+
+    // listIterator переход к следующего/предыдущего
+    listIterator.next();
+    listIterator.previous();
+
+    // listIterator проверка существование следующего/предыдущего
+    boolean hasNext = listIterator.hasNext();
+    boolean hasPrevious = listIterator.hasPrevious();
+
+    // listIterator получение индекса следующего/предыдущего
+    int nextIndex = listIterator.nextIndex();
+    int previousIndex = listIterator.previousIndex();
+
+    // listIterator обход всех элементов и их изменение
+    listIterator.forEachRemaining(e -> e = e + "prefix");
+
+
+    //Проверка CRUD
+
+    // Добавление элемента
+    ListIterator<String> listIterator1 = Arrays.asList("1","2","3","4","5").listIterator();
+    listIterator1.add("6");
+
+    // Удаление элемента
+    ListIterator<String> listIterator2 = Arrays.asList("1","2","3","4","5").listIterator();
+    while (listIterator2.hasNext()){
+        if(listIterator2.next().equals("3")){
+            listIterator2.remove();
+            break;
+        }
+    }
+
+    // Изменение элемента
+    ListIterator<String> listIterator3 = Arrays.asList("1","2","3","4","5").listIterator();
+    while (listIterator3.hasNext()){
+        if(listIterator3.next().equals("4")){
+            listIterator3.set("44");
+            break;
+        }
+    }
+
+    // Чтение
+    ListIterator<String> listIterator4 = Arrays.asList("1","2","3","4","5").listIterator();
+    String read = listIterator4.next();
+    
+}
+```
 
 
 
