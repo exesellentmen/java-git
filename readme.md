@@ -1827,94 +1827,704 @@ https://www.baeldung.com/java-queue-linkedblocking-concurrentlinked<br />
 
 
 
+**5.20 LinkedList<T>** - стандартная очередь, также реализует List
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**Отличия от Iterator:**<br />
-- Vector - синхронизируется, т е в один момент времени к Vector имеет доступ только один поток, что позволяет не поврежать данные<br />
-- Увеличение емкости, Vector удваивает свой размер, ArrayList увеличивает в полтора раза<br />
-- Vector имеет Enumeration в отличие от ArrayList(Преимущества Enumeration: синхронизированы, элементы в колекции защищены, не удаляются, не заменяются и не добавляются, )<br />
-- Vectore имеет устаревшие функции, которые есть только в Vectore<br />
-
-**Примечания:**<br />
-- listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам List<br />
-
-
-**Пример работы:**
+**Пример работы с linkdeList как с queue:**
 ```java
-// listIterator
+// Работа с LinkedList как с queue
 @Test
-public void listIteratorTest(){
-    ArrayList<String> arrayList = new ArrayList<>(List.of("1","2","3","4","5"));
-
-    ListIterator<String> listIterator = arrayList.listIterator();
-
-    // listIterator взаимосвязан с изначальным ArrayList, при изменении элементов в listIterator, меняется и сам ArrayList
-    listIterator.next();
-    listIterator.remove();
-
-    // listIterator переход к следующего/предыдущего
-    listIterator.next();
-    listIterator.previous();
-
-    // listIterator проверка существование следующего/предыдущего
-    boolean hasNext = listIterator.hasNext();
-    boolean hasPrevious = listIterator.hasPrevious();
-
-    // listIterator получение индекса следующего/предыдущего
-    int nextIndex = listIterator.nextIndex();
-    int previousIndex = listIterator.previousIndex();
-
-    // listIterator обход всех элементов и их изменение
-    listIterator.forEachRemaining(e -> e = e + "prefix");
-
-
-    //Проверка CRUD
-
-    // Добавление элемента
-    ListIterator<String> listIterator1 = Arrays.asList("1","2","3","4","5").listIterator();
-    listIterator1.add("6");
-
-    // Удаление элемента
-    ListIterator<String> listIterator2 = Arrays.asList("1","2","3","4","5").listIterator();
-    while (listIterator2.hasNext()){
-        if(listIterator2.next().equals("3")){
-            listIterator2.remove();
-            break;
-        }
+void linkedListQueueTest(){
+    Queue<Integer> linkedList = new LinkedList<>();
+    for (int i = 0; i < 1000; i++) {
+        linkedList.add(i);
     }
 
-    // Изменение элемента
-    ListIterator<String> listIterator3 = Arrays.asList("1","2","3","4","5").listIterator();
-    while (listIterator3.hasNext()){
-        if(listIterator3.next().equals("4")){
-            listIterator3.set("44");
-            break;
-        }
+    //Getting an element without removing, if queue is empty returns exception
+    Integer element = linkedList.element();
+
+    //Getting an element without removing, if queue is empty returns null
+    Integer peek = linkedList.peek();
+
+    //Additing an element if it's possible else false
+    linkedList.offer(1001);
+
+    //Additing an element if it's possible else exception
+    linkedList.add(1002);
+
+    // Getting an element with deleting from queue, if empty returns null
+    Integer poll = linkedList.poll();
+
+    //Bypass all elements without deleting
+    for (Integer i : linkedList) {
+        System.out.println(i);
     }
 
-    // Чтение
-    ListIterator<String> listIterator4 = Arrays.asList("1","2","3","4","5").listIterator();
-    String read = listIterator4.next();
-    
+    Queue<Integer> linkedList2 = new LinkedList<>();
+    //With deleting elements array traversing
+    while (!linkedList.isEmpty()){
+        linkedList2.add(linkedList.poll());
+    }
+
 }
 ```
+<br />
+
+**5.21 Deque<T>** - можно получить как с начала, так и с конца очереди<br />
+
+
+**5.22 PriorityQueue<T>** - очередь на основе приоритетов, сортирует элементы согласно правилу Comparator. Есть стандартная сортировка<br />
+
+
+**5.23 PriorityQueue<T>** - очередь на основе приоритетов, сортирует элементы согласно правилу Comparator. Есть стандартная сортировка<br />
+
+
+
+**5.24 LinkedBlockingQueue** - очередь для многопоточности(потокобезопасная), характерная тем, что может быть неограничена по размеру, и обладает блокирующим характером, т е, если очередь пуста и поток пытается получить, он замораживается, а если очередь наполняется, поток возобновляет работу, тоже самое и с переполнением очереди. Работает на связанных узлах<br />
+Если мы уткнемся в ограничение времени, вернет исключение OutOfMemoryError<br />
+
+**Реализует BlockingQueue interface**<br />
+
+**Пример:**<br />
+BlockingQueue<Integer> boundedQueue = new LinkedBlockingQueue<>(100);<br />
+BlockingQueue<Integer> unboundedQueue = new LinkedBlockingQueue<>(); // неограниченная по размеру<br />
+
+**Ресурс блокируется если:**<br />
+- блокируется если заканчиваются элементы в очереди, если элементы появились потоки запускаются<br />
+- блокируется если очередь заполнена, если место появвилось поток запускается<br />
+- блокируется если поток получает элемент<br />
+- блокируется если поток добавляет элемент<br />
+
+**Методы для многопоточности:**<br />
+boundedQueue.take(); // получение потока, если элементов нет, замораживается потоки, но если появится опять, продолжет выполнение<br />
+boundedQueue2.put(elem); // добавляет элемент, если очередь полная, поток останавливается, когда место появляется поток возобновляется<br />
+
+
+В результате при работе с потоком мы не получим колизей и так далее, как например при работе с очередью LinkedList. В результате перемещение элементов из одной очереди в другую мы получим одинаковые элементы, которых не было:<br />
+283 = 281 !duplicate<br />
+284 = 282<br />
+285 = 281 !duplicate<br />
+
+**Пример работы с потоками и очередями**<br />
+```java
+//Пример работы с потоками
+BlockingQueue<Integer> boundedQueue = new LinkedBlockingQueue<>();
+BlockingQueue<Integer> boundedQueue2 = new LinkedBlockingQueue<>();
+
+for(int i = 0; i < 40000; i++){
+    boundedQueue.add(i);
+}
+
+ExecutorService executorService1 = Executors.newFixedThreadPool(8);
+for(int i = 0; i < 8; i++){
+    Runnable runnable = () -> {
+        while (boundedQueue.peek() != null){
+            Integer elem = boundedQueue.poll();
+            if(elem != null){
+                boundedQueue2.add(elem);
+            }
+        }
+    };
+    executorService1.execute(runnable);
+}
+```
+
+
+**5.25 ConcurrentLinkedQueue** - неограниченная, потокобезопасная и не блокирующая очередь. Неограниченная по размеру, возможность работать с многопоточностью, не блокирует потоки в случае опустошения очереди возвращает null<br />
+
+Если мы запустим поток, который будет постоянно считывать из очереди элементы, он будет получать null если нету элементов, но если элементы появляются, то он начнет получать элементы, результат примерно такой:<br />
+```java
+null
+null
+OurElement
+null
+null
+null
+null
+OurElement
+....
+```
+
+**Пример:**
+```java
+// concurrentLinkedQueue - демонстрация работы
+@Test
+void concurrentLinkedQueueTest(){
+    // Создаем очереди concurrentLinkedQueue
+    Queue<Integer> concurrentLinkedQueue1 = new ConcurrentLinkedQueue<>();
+    Queue<Integer> concurrentLinkedQueue2 = new ConcurrentLinkedQueue<>();
+
+    // Запускаем производителей, которые каждые 100 млс будут производить
+    ExecutorService producers = Executors.newFixedThreadPool(4);
+    for (int i = 0; i < 4; i++){
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Runnable producer = () -> {
+            while (true){
+                concurrentLinkedQueue1.add(22222222);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        producers.execute(producer);
+    }
+
+    // Запускаем потребителей, которые будут возвращать null, но когда будет номер будет возвращать номер
+    ExecutorService customers = Executors.newFixedThreadPool(4);
+    for (int i = 0; i < 4; i++){
+        Runnable customer = () -> {
+            while (true){
+                System.out.println(concurrentLinkedQueue1.poll());
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        customers.execute(customer);
+    }
+
+    try {
+        TimeUnit.SECONDS.sleep(20);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**21. ArrayBlockingQueue** - очередь потокобезопасная, блокирующая, ограниченая по размеру<br />
+
+**Пример:**<br />
+BlockingQueue<Integer> arrayBlockingQueue = new ArrayBlockingQueue<>(100);
+
+**Конструкторы:**<br />
+ArrayBlockingQueue(int capacity) // размер
+ArrayBlockingQueue(int capacity, boolean fair) // размер и политика доступа
+ArrayBlockingQueue(int capacity, boolean fair, Collection<? extends E> c) // размер, политика доступа и массив элементов
+
+
+
+**22. priorityBlockingQueue** - потокобезопасная блокирующая очередь поддерживающая приоритетность<br />
+
+**Детали:**<br />
+- не поддерживает изначальный порядок добавления элементов в очередь, сразу сортирует по указанному порядку<br />
+- можно кастомизировать порядок, согласно переданного Comparator или лямбды<br />
+PriorityBlockingQueue<Integer>(10000, (o1, o2) -> ((Integer) o2).compareTo(((Integer) o1)));
+- реализует интерфейс BlockingQueue<br />
+- Схож с PriorityQueue, но имеет блокирующий интерфейс, что позволяет предоставлять свойства блокировки<br />
+- В случаях окончания элементов или заполнение автоматически блокирует потоки, до благоприятных условий при которых их разблокирует<br />
+- может быть очередью с неорграниченной вместимостью<br />
+- повторяющиеся элементы разрешены<br />
+- null не разрешен<br />
+
+**Конструкторы:**<br />
+```java
+public PriorityBlockingQueue()
+public PriorityBlockingQueue(int initialCapacity)  
+public PriorityBlockingQueue(int initialCapacity, Comparator<? super E> comparator)  
+public PriorityBlockingQueue(Collection<? extends E> c) 
+```
+
+**Пример**<br />
+```java
+@Test
+void priorityBlockingQueue() throws InterruptedException {
+    BlockingQueue<Integer> priorityBlockingQueue = new PriorityBlockingQueue<Integer>(10000, (o1, o2) -> ((Integer) o2).compareTo(((Integer) o1)));
+    BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<>();
+
+    //Производители, которые добавляют случайные числа от 1-го до 10
+    ExecutorService producers = Executors.newFixedThreadPool(4);
+    for (int i = 0; i < 4; i++) {
+        Runnable producer = ()->{
+            while (true){
+                int randomNum = ThreadLocalRandom.current().nextInt(1, 10);
+                try {
+                    priorityBlockingQueue.put(randomNum);
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+        producers.execute(producer);
+    }
+    TimeUnit.SECONDS.sleep(5);
+    producers.shutdown();
+    TimeUnit.SECONDS.sleep(5);
+
+
+    //Производители, которые добавляют случайные числа от 1-го до 10
+    ExecutorService customers = Executors.newFixedThreadPool(4);
+    for (int i = 0; i < 4; i++) {
+        Runnable customer = ()->{
+            while (true) {
+                try {
+                    Integer elem = priorityBlockingQueue.take();
+                    System.out.println(elem);
+                    blockingQueue.put(elem);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        customers.execute(customer);
+    }
+
+    TimeUnit.SECONDS.sleep(10);
+    customers.shutdown();
+
+}
+```
+
+
+**22. SynchronousQueue** - очередь для многопоточности<br />
+
+
+**23. Deque** - интерфейс для Очередей в которой можно получать элементы как с начала так и с начала очереди<br />
+
+**Реализации:**<br />
+- ArrayDeque(неограниченная, двухсторонняя)<br />
+- LinkedList(неограниченная, двухсторонняя) <br />
+- ConcurrentLinkedDeque(потокобезопасная, неограниченная, двухсторонняя)<br />
+- LinkedBlockingDeque(потокобезопасная, блокирующая, неограниченная, двухсторонняя)<br />
+
+**Методы:**<br />
+peek - получение элемента без удаление, возвращает element/null<br />
+pool - получение элемента с удалением, возвращает element/null<br />
+get - получение элемента без удаление, возвращает element/exception<br />
+add - добавление элемента, возвращает true/exception<br />
+offer - добавление элемента, возвращает true/false<br />
+
+**Примеры работы:**
+```java
+// Все очереди с deque
+@Test
+void duqueTest() throws InterruptedException {
+
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    for (int i = 0; i < 1000; i++) {
+        arrayList.add(i);
+    }
+
+    //Deque Initialization
+    Deque<Integer> arrayDeque = new ArrayDeque<>(arrayList);
+    Deque<Integer> linkedList = new LinkedList<>(arrayList);
+
+    // MultiThreading
+    Deque<Integer> concurrentLinkedDeque = new ConcurrentLinkedDeque<>(arrayList);
+    BlockingDeque<Integer> linkedBlockingDeque = new LinkedBlockingDeque<>(arrayList);
+
+    //Additing at first or at last. If possible - true else exception
+    arrayDeque.addLast(9999);
+    arrayDeque.addFirst(8888);
+
+    //Additing an elements at first or at last. If possible - true else - false
+    arrayDeque.offerFirst(2222);
+    arrayDeque.offerLast(1111);
+
+    // Getting from first or from end without removing. If possible - true else - exception
+    Integer getFirst = arrayDeque.getFirst();
+    Integer getLast = arrayDeque.getLast();
+
+    // Getting from first or from end without deleting. If it's empty returns null
+    Integer peekFirst = arrayDeque.peekFirst();
+    Integer peekLast = arrayDeque.peekLast();
+
+    // Getting from first or from end with deleting. If it's empty returns null
+    Integer pollFirst = arrayDeque.pollFirst();
+    Integer pollLast = arrayDeque.pollLast();
+
+    // Getting elements from beginning and ending
+    ExecutorService executorService = Executors.newFixedThreadPool(8);
+    for (int i = 0; i < 4; i++) {
+        Runnable runnableFirst = () -> {
+            while (true){
+                try {
+                    System.out.println(linkedBlockingDeque.takeFirst());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        executorService.execute(runnableFirst);
+
+        Runnable runnableLast = () -> {
+            while (true) {
+                try {
+                    System.out.println(linkedBlockingDeque.takeLast());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        executorService.execute(runnableLast);
+    }
+    TimeUnit.SECONDS.sleep(3);
+    executorService.shutdown();
+}
+```
+
+
+**24. DelayQueue** - потокобезопасная, блокирующая, неограниченная очередь, основана на выдачи элементов по истечению времени. 
+Реализуют интерфейс BlockingQueue<br />
+
+**Пример**<br />
+```java
+BlockingQueue<DelayObject> delayQueue = new DelayQueue<>();
+```
+
+Элементы должны реализовывать интерфейс Delayed<br />
+
+Для реализации DelayObject мы должны реализовать методы:<br />
+public long getDelay(TimeUnit unit) - должен возвращать отрицательное значение, сколько времени в миллисекундах будет задержка
+Например:
+-3000 // 3 секунды будет задержка
+
+**Применение:**<br />
+Например можно вполнять задачи по расписанию запускать воркеры в ожидания задач, при это воркеры не занимаю вычесление т к BlockingQueue их замораживает 
+Пример Delayed, отсчет начнется после создания элемента<br />
+
+**Пример кода**
+```java
+class DelayObject implements Delayed {
+
+    private String name;
+    private long time;
+
+    // Constructor of DelayObject
+    public DelayObject(String name, long delayTime)
+    {
+        this.name = name;
+        this.time = System.currentTimeMillis()
+                + delayTime;
+    }
+
+    // Implementing getDelay() method of Delayed
+    @Override
+    public long getDelay(TimeUnit unit)
+    {
+        long diff = time - System.currentTimeMillis();
+        return unit.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    // Implementing compareTo() method of Delayed
+    @Override
+    public int compareTo(Delayed obj)
+    {
+        if (this.time < ((DelayObject)obj).time) {
+            return -1;
+        }
+        if (this.time > ((DelayObject)obj).time) {
+            return 1;
+        }
+        return 0;
+    }
+}
+
+
+@Test
+void delayQueueTest() throws InterruptedException {
+    BlockingQueue<DelayObject> delayQueue = new DelayQueue<>();
+
+    delayQueue.add(new DelayObject("Test 500",500L));
+    delayQueue.add(new DelayObject("Test 3000",3000L));
+    delayQueue.add(new DelayObject("Test 100",100L));
+    delayQueue.add(new DelayObject("Test 2000",2000L));
+    delayQueue.add(new DelayObject("Test 6000",6000L));
+    delayQueue.add(new DelayObject("Test 2000",2000L));
+
+    Thread thread = new Thread(()->{
+        while (true){
+            try {
+                System.out.println(delayQueue.take().name);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    });
+    thread.start();
+    TimeUnit.SECONDS.sleep(10);
+}
+
+@Test
+void delayQueueSecondTest() throws InterruptedException {
+
+    DelayObject delayObject = new DelayObject("Test 500",500L);
+
+    BlockingQueue<DelayObject> blockingQueue = new DelayQueue<>();
+    blockingQueue.add(new DelayObject("Test 500",500L));
+    blockingQueue.add(new DelayObject("Test 2000",2000L));
+    blockingQueue.add(new DelayObject("Test 1000",1000L));
+    blockingQueue.add(new DelayObject("Test 5000",5000L));
+
+    DelayQueue<DelayObject> delayQueue = new DelayQueue<>();
+
+    while (true){
+        System.out.println(blockingQueue.take().name);
+    }
+
+}
+```
+<br />
+
+**25. SynchronousQueue** - потокобезопасная, блокирующая, неограниченная очередь с размером в 1 элемент, альтернатива атомарным переменным, но более удобна, когда производитель кладет элемент он замораживается пока потребитель не вытащит элемент. Можно работать по принцыпу производитель - потребитель
+https://www.codeflow.site/ru/article/java-synchronous-queue<br />
+
+Данная очередь сильно оптимизированна в отличии от LinkedBlockingQueue<br />
+Она имеет размер 1 элемент<br />
+
+**Пример:**
+```java
+@Test
+void synchronousQueueTest(){
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    SynchronousQueue<Integer> synchronousQueue = new SynchronousQueue<>();
+
+    Runnable producer = () -> {
+        Integer producedElement = 3333;
+        try {
+            synchronousQueue.put(producedElement); // замораживается поток, пока потребитель не снимет элемент из очереди
+            synchronousQueue.put(producedElement);
+            synchronousQueue.put(producedElement);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    };
+
+    Runnable consumer = () -> {
+        try {
+            Integer consumedElement = synchronousQueue.take();
+            System.out.println(consumedElement);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    };
+    executorService.execute(consumer);
+    executorService.execute(producer);
+}
+```
+
+
+**26. Использование общих переменных(Shared Variable) в потоках** - для этих задач можно использовать АТОМАРНЫЕ переменные, т е переменные оснащенные методами для реализации атомарности, например такие как:<br />
+```java
+AtomicInteger.compareAndSet(current,value);
+```
+<br />
+**Атомарные операции** - операции которые совершаются полностью или не совершаются вовсе, например i++ это 3 операции, чтение, увеличение значение и запись. Во время этого другие потоки могут также изменить это значение, в результате мы получим неверное значение.<br />
+
+АТОМАРНЫЕ переменные позволяют с помощью атомарной операции проверить было ли изменено значение current или нет, если нет, то мы устанавливаем ему новое значение в обратном случае возвращает false.<br />
+Далее мы этот код помещаем в бесконечный цикл, который будет пытаться изменить значение и когда отдаст true мы выходим из цикла:<br />
+```java
+int current, value;
+do{
+    current = atomicInteger.get();
+    // И другие операции: Этот блок будет атомарным, т е либо выполнится полностью либо не выполнится вообще
+    value = current + 1; // integer.incrementAndGet();
+    value = value + 1;
+
+} while (!atomicInteger.compareAndSet(current,value));
+```
+
+
+**Атомарность** - операция, которая выполняется полностью либо не выполняется вообще. Атомарность очень актуально в многопоточных приложениях например i++, это с точки зрения JVM несколько операций, чтение и запись, но если данная операция не атомарна, она может привести к ошибке, например 2 потока увеличивают это значение i++, в результате они могут прочитать значение одновременно и увеличить значение на 1 одновременно, а мы будем ожидать увеличение 2 раза.
+Для решения данной проблемы и существует атомарность, блокировка и синхронизация.<br />
+
+**Писимистический подход общих переменных**<br />
+Блокировка, блокирует все потоки как бутылочное горлышко, пока 1 поток не завершит операцию. <br />
+Минусы:<br />
+- Возможность взаимной блокировки - это заблокирует несколько потоков, без возможности разблокировки<br />
+- С ресурсом(переменной) в один момент времени может работать только 1 поток<br />
+
+**Оптимистический подход общих переменных**<br />
+Если поток видет что переменная изменилась другим потоком, он меняет переменную уже исходя из нового значения<br />
+
+
+**Механизм оптимистической блокировки** - мы получаем значение переменной, проводим расчеты, получаем новый результат этой переменной, проверяем поменялась ли переменная за это время, если нет, то меняем, если да, проводим иттерацию с начала, это работает с атомарными переменными через метод:
+compareAndSet() вернет false если значение было изменено<br />
+приведет к новой итерации цикла while в методе getAndAdd.<br />
+
+**Классы:**<br />
+https://java-online.ru/concurrent-atomic.xhtml<br />
+AtomicInteger - класс для работы с Integer внутри потока, позволяет не быть final<br />
+
+
+**Пример:**
+```java
+// Пример использование атомарных переменных и атомарных операций
+@Test
+void sharedVariableThird() throws InterruptedException {
+    AtomicInteger atomicInteger = new AtomicInteger(); //Создаем атомарную переменную
+    atomicInteger.set(0);
+    Runnable runnable = ()->{
+        for (int i = 0; i < 50000; i++) {
+            int current, value;
+            do{
+                current = atomicInteger.get(); // получаем текущее значение
+                // И другие операции: Этот блок будет атомарным, т е либо выполнится полностью либо не выполнится вообще
+                value = current + 1; // integer.incrementAndGet();
+                value = value + 1;
+
+            } while (!atomicInteger.compareAndSet(current,value)); // Проверяем, изменялась ли переменная другими потоками, если нет то изменяем значение
+
+            // Или можем использовать уже готовые функции AtomicInteger
+            //integer.incrementAndGet();
+            //integer.incrementAndGet();
+        }
+        System.out.println(Thread.currentThread().getName() + " is finished");
+    };
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    TimeUnit.SECONDS.sleep(1);
+    System.out.println(atomicInteger.get()); // Результат должен быть 400 000
+}
+
+// Многопоточность БЕЗ АТОМАРНОСТИ с ошибками. Если мы запустим изменение переменной в 4х циклах мы получим случаи значение отличное от ожидаемого, так как нет блокировки ресурса, и потоки работают одновременно
+@Test
+void sharedVariableWithoutBlocking() throws InterruptedException {
+    AtomicInteger integer = new AtomicInteger();
+    integer.set(0);
+    Runnable runnable = ()->{
+        for (int i = 0; i < 50000; i++) {
+            integer.set(integer.get() + 1);
+
+        }
+        System.out.println(Thread.currentThread().getName() + " is finished");
+    };
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    (new Thread(runnable)).start();
+    TimeUnit.SECONDS.sleep(2);
+    System.out.println(integer.get());
+}
+```
+<br />
+
+**27. LinkedTransferQueue** - потокобезопасная, блокирующа, неограниченная очередь с некоторыми аспектами. Поток имеет метод transfer() который передает только по одному элементу и про втором вызове замораживает поток для ожидания потребителя<br />
+
+**Логика:**<br />
+- Если добавляем через add() или put(), то добавляет сколько угодно элементов как обычная очередь<br />
+```java
+linkedTransferQueue.put(11);
+linkedTransferQueue.add(12);
+```
+- Если добавляем через transfer(), элемент передается в поток и идет дальше, но если вызываем второй раз transfer(), поток Производитель замораживается<br />
+```java
+linkedTransferQueue.transfer(1);
+```
+- Если Потребитель получает элемент через take() он выполняет код с ним, а только потом выполняется остальной код Производителя<br />
+```java
+linkedTransferQueue.take();
+transfer(); // Второй вызов transfer() замораживает поток<br />
+```
+
+TransferQueue - интерфейс<br />
+BlockingQueue - интерфейс<br />
+    LinkedTransferQueue - реализация<br />
+
+**Методы:**<br />
+put(e); // кладет элементы в очередь, элемент, который находится в очереди больше всего будет взят первым<br />
+transfer(e); // кладет элемент в очередь если потребитель ожидает, в обратном случае будет блокирован, переведен в режим ожидания, по логике SynchronousQueue<br />
+
+
+**Не гарантируется что массовые операции будут выполненны полностью(Атомарно):**<br />
+addAll()<br />
+removeAll()<br />
+retainAll()<br />
+containsAll()<br />
+equals()<br />
+toArray()<br />
+
+
+**Пример:**
+```java
+@Test
+void transferQueueTest() throws InterruptedException {
+    TransferQueue<Integer> linkedTransferQueue = new LinkedTransferQueue();
+    
+    Runnable producer = ()->{
+        try {
+            linkedTransferQueue.transfer(1);
+            System.out.println("1 Added");
+            linkedTransferQueue.transfer(2);
+            System.out.println("2 Added");
+            linkedTransferQueue.transfer(3);
+            System.out.println("3 Added");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    };
+
+    Runnable consumer = ()->{
+        try {
+            System.out.println(linkedTransferQueue.take());
+            System.out.println(linkedTransferQueue.take());
+            System.out.println(linkedTransferQueue.take());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    };
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    executorService.execute(producer);
+    TimeUnit.SECONDS.sleep(1);
+    executorService.execute(consumer);
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
