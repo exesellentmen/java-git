@@ -1149,24 +1149,24 @@ public class ThreadApplication {
 
 ### 5. Колекции и Map
 
-**1) java.util** - коллекции и структуры данных
+**5.1 java.util** - коллекции и структуры данных
 
-**2) Источники:**
+**5.2 Источники:**
 - https://it.wikireading.ru/32696
 - https://www.bestprog.net/ru/2022/03/23/java-introduction-to-java-collections-framework-ru/#q03
 - https://java-online.ru/java-util.xhtml
 
-**3) Картинка:**
+**5.3 Картинка:**
 https://storage.yandexcloud.net/wr4img/376517_15_14-1.png
 
 
-**4) Типы структур:**
+**5.4 Типы структур:**
 https://i.pinimg.com/originals/c8/c4/66/c8c466b3cfb59a2a209e59c2972db3c0.png
 https://dz2cdn1.dzone.com/storage/temp/13795578-java-collection-framework-hierarchy.jpg
 https://book.huihoo.com/oreilly/java/fclass/figs/jfc_1701.gif
 
 
-**5) Все классы и интерфейсы.**
+**5.5 Все классы и интерфейсы.**
 
 Iterable<T> - интерфейс <br />
     Iterator<T> - интерфейс <br />
@@ -1202,86 +1202,108 @@ https://www.youtube.com/watch?v=0sWpjUvbGcQ
 
 
 
+**5. Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
 
+**Методы:**<br />
+- обход массивов(iterator.next()), <br />
+- проверка есть ли следующий элемент(iterator.hasNext()), <br />
+- более лаконичный обход массивов(iterator.forEachRemaining((element) -> {System.out.println(element);}))<br />
+- удаление текущего элемента(iterator.remove())<br />
 
-
-
-
-
-
-
-
-
-
-**Описание:**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**4.5 getClass() method** - метод объекта Object, возвращает экземляр класса Class, который содержит информацию о классе на основе которого был создан объект из которого был вызван метод getClass().
-Необходим в случае разработки библиотек или например контейнеров зависимостей<br />
-
-
-**class Class** - это класс, который позволяет возвращать различные данные о классе, такие как:
-- имя класса
+**Пример:**<br />
 ```java
-classTest.getSimpleName();
-```
-- полное имя класса
-```java
-classTest.getName();
-```
-- набор методов
-```java
-classTest.getMethods();
-try {
-    Method setName = classTest.getMethod("setName", String.class);
-} catch (NoSuchMethodException e) {
-    e.printStackTrace();
+//Interface Iterator - необходим для обхода массива, получение следующего элемента, или определение есть ли следующий
+//Interface Iterator - requiered for collection traversing, getting a next element, checking if there is a next element, deleting a curent element
+@Test
+void iteratorInterface() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    arrayList.add("1");
+    arrayList.add("2");
+    arrayList.add("3");
+
+    Iterator<String> iterator = arrayList.iterator();
+
+    //Проверяем есть ли следующий элемент(Checking, if there is the next element )
+    boolean hasNext = iterator.hasNext(); // true
+
+    //Мы получаем следующий элемент(Getting the next element)
+    String str = iterator.next(); // 1
+
+    iterator.next();
+
+    // Удаляет текущий элемент, в данный момент 2ой, также и в самой коллекции ArrayList(Deleting the current element)
+    iterator.remove(); // iterator = {"1", "3"}
+
+    // Обход элементов массива более лаконичным способом(more convenient array traversing)
+    arrayList.iterator().forEachRemaining((element) -> {
+        System.out.println(element);
+    });
 }
 ```
-- набор свойств
-- интерфейсы, которые он реализует
-- супер классы (родительские классы)
 
 
-**class Field** - это класс, который позволяет работать со свойством класса и с объектами, которые принадлежат данному классу. Позволяет проводить такие действия как:
-- получение Fields из объекта
-```java
-Field fields = testObject.getClass().getDeclaredFields();
-```
-- получать или устанавливать значения для свойств объекта
-```java
-String name = (String) fields[0].get(testObject);
-String name = (String) fields[0].set(testObject, "test value");
-```
-- узнавать доступно ли свойство для редактирования
-```java
-boolean accessField = fields[1].canAccess(testObject);
-```
-- изменять доступность свойств, например с private на public и обратно
-```java
-fields[1].setAccessible(true);
-```
-- устанавливать значения в случаи примитивных значений свойства
-```java
-fields[0].setInt(testObject,3);
-```
 
-<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=========================================
+
+
+**5. Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
+
+**Методы:**<br />
+- обход массивов(iterator.next()), <br />
+- проверка есть ли следующий элемент(iterator.hasNext()), <br />
+- более лаконичный обход массивов(iterator.forEachRemaining((element) -> {System.out.println(element);}))<br />
+- удаление текущего элемента(iterator.remove())<br />
+
+**Пример:**<br />
+```java
+//Interface Iterator - необходим для обхода массива, получение следующего элемента, или определение есть ли следующий
+//Interface Iterator - requiered for collection traversing, getting a next element, checking if there is a next element, deleting a curent element
+@Test
+void iteratorInterface() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    arrayList.add("1");
+    arrayList.add("2");
+    arrayList.add("3");
+
+    Iterator<String> iterator = arrayList.iterator();
+
+    //Проверяем есть ли следующий элемент(Checking, if there is the next element )
+    boolean hasNext = iterator.hasNext(); // true
+
+    //Мы получаем следующий элемент(Getting the next element)
+    String str = iterator.next(); // 1
+
+    iterator.next();
+
+    // Удаляет текущий элемент, в данный момент 2ой, также и в самой коллекции ArrayList(Deleting the current element)
+    iterator.remove(); // iterator = {"1", "3"}
+
+    // Обход элементов массива более лаконичным способом(more convenient array traversing)
+    arrayList.iterator().forEachRemaining((element) -> {
+        System.out.println(element);
+    });
+}
+```
 
 
 
