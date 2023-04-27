@@ -1242,6 +1242,174 @@ void iteratorInterface() {
 ```
 
 
+**5.7 Collection<T>** - базовый интерфейс для всех коллекций и других интерфейсов коллекций, который включает такие методы как добавить(add(), addALL()), удалить(remove(), removeAll, removeIf(), retainAll()), проверить на наличие элементов(containsAll(),contains())
+
+**Методы:**<br />
+add()<br /> 
+addALL()<br /> 
+remove()<br />
+removeAll<br /> 
+removeIf()<br /> 
+retainAll()<br /> 
+containsAll()<br /> 
+contains()<br /> 
+
+
+**Пример:**<br />
+```java
+@Test
+void collectionInterface(){
+    // Создаем коллекцию из значений
+    Collection<String> collection = new ArrayList<>(Arrays.asList("1","2","3"));
+
+    // Добавление элемента(Adding an element)
+    collection.add("4");
+
+    // Добавление нескольких элементов(Adding multiple elements)
+    collection.addAll(List.of("5", "6", "7"));
+
+    // Получение количество элементов(Getting the numbers of elements)
+    Collection<String> collection1 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    int size = collection1.size(); // 5
+
+    // Определяем есть ли данный элемент(determining whether there is a given element)
+    Collection<String> collection2 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    boolean containsElement = collection2.contains("5"); // true
+    boolean containsElementfalse = collection2.contains("10"); // false
+
+    //Определяем есть ли несколько элементов в коллекции
+    Collection<String> collection3 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    boolean containsAll = collection3.containsAll(List.of("1", "3", "4"));
+    boolean containsAllfalse = collection3.containsAll(List.of("1", "3", "41")); // false
+
+    //Проверяет наличие элементов(checking whether there the elements)
+    Collection<String> collection4 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    boolean empty = collection4.isEmpty(); // true
+
+    //Удаление элемента из коллекции (deleting an element from collection)
+    Collection<String> collection5 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    collection5.remove("2"); // collection {"1","3","4","5"}
+
+    //Удаление нескольких элементов из коллекции(Deleting multiple elements from a collection)
+    Collection<String> collection6 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    collection6.removeAll(List.of("1","4")); // collection {"2","3","5"}
+
+    // Удаление элементов соответствующих условиям(Deleting the elements that match the conditions )
+    Collection<String> collection7 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    collection7.removeIf(elem -> elem.equals("3") || elem.equals("4"));  // collection {"1","2","5"}
+
+    // Удаление элементов не совпадающие(Deleting the elements that dont mach the conditions)
+    Collection<String> collection8 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    collection8.retainAll(List.of("1","2","3")); // collection {"1","2","3"}
+
+    // Удаление всех элементов (Deleting all elements)
+    Collection<String> collection9 = new ArrayList<>(Arrays.asList("1","2","3","4","5"));
+    collection9.clear(); // collection {}
+}
+```
+
+
+**5.8 List<T>** - интерфейс, который наследует все методы collection
+
+**Методы:**<br />
+- set(index, value)<br /> 
+- addAll(index, collection) - добавление элементов с заданой коллекции<br /> 
+- remove(index) - удаление элемента по индексу<br /> 
+- indexOf(value) - поиск индекса элемента по его значению<br /> 
+- lastIndexOf(value) - поиск последнего вхождения по значению<br /> 
+- listIterator() - получение ListIterator, аналог Iterator, но позволяет работать с дополнительными методами <br /> 
+- replaceAll(e -> e.toLowerCase()) - позволяет приминить действия ко всем элементам List<br /> 
+- sort((e,w)-> e.compareTo(w)) - позволяет отсортировать все элементы по условию<br /> 
+- subList(2, 4) - получить под массив с индекса 2 до индекса 4(2 элемента)<br /> 
+- spliterator() - получение spliterator, который работает параллельно как итератор<br /> 
+
+**Пример:**<br />
+```java
+//Interface Iterator - необходим для обхода массива, получение следующего элемента, или определение есть ли следующий
+//Interface Iterator - requiered for collection traversing, getting a next element, checking if there is a next element, deleting a curent element
+@Test
+void iteratorInterface() {
+    ArrayList<String> arrayList = new ArrayList<>();
+    arrayList.add("1");
+    arrayList.add("2");
+    arrayList.add("3");
+
+    Iterator<String> iterator = arrayList.iterator();
+
+    //Проверяем есть ли следующий элемент(Checking, if there is the next element )
+    boolean hasNext = iterator.hasNext(); // true
+
+    //Мы получаем следующий элемент(Getting the next element)
+    String str = iterator.next(); // 1
+
+    iterator.next();
+
+    // Удаляет текущий элемент, в данный момент 2ой, также и в самой коллекции ArrayList(Deleting the current element)
+    iterator.remove(); // iterator = {"1", "3"}
+
+    // Обход элементов массива более лаконичным способом(more convenient array traversing)
+    arrayList.iterator().forEachRemaining((element) -> {
+        System.out.println(element);
+    });
+}
+```
+
+**5.9 Time complexity - Временая сложность** - временая сложность, показывает количество шагов для выполнения задачи
+
+**Термины:**<br />
+n - number of element - номер элемента<br />
+O(n) - линейное время, чем больше размер ввода, тем больше потребуется времени для выполнения. (Пример: Поиск наименьшего или наибольшего элемента в неотсортированном массиве)<br />
+O(1) - константное время<br />
+O(log2(n))- логарифмическое время(Пример: Двоичный поиск в отсортированном массиве)<br />
+O(n^2)- квадратичное время(Пример: Сортировка пузырьком, сортировка вставками)<br />
+O(n * log2(n)) - линейно-логарифмическое время(Самая быстрая сортировка сравнением)<br />
+log a под основанием b - это значит что в какую степень нужно возвести b чтобы получить a
+
+Например двоичный поиск при 32, время выполнения
+log2(32) = 5
+Итого 5 шагов
+
+Онлайн калькулятор:
+https://umath.ru/calc/vychislenie-logarifma-chisla-onlajn/
+
+
+**5.10 ArrayList<T>** - класс, который реализует динамический массив
+
+**Источники:**<br />
+https://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html<br />
+https://www.baeldung.com/java-collections-complexity<br />
+
+**Заметки:**<br />
+- Для оптимизации, если известно что массив будет содержать большое количество элементов, лучше сразу указать размер, так как при каждом добавлении будет создаваться новый элементв в массиве что замедляет работу<br />
+```java
+ArrayList<String> list2 = new ArrayList<>(10000);
+```
+- Сложность при удалении элемента, но можно решить:<br />
+Решение для ArrayList:<br />
+Записывал вместо удаления null, а в конце просто убрал бы все null элементы или при итерировании игнорировал бы null значения.<br />
+
+**Временая сложность ArrayList (Time complexity for ArrayList):**<br />
+O(1) - Постоянное количество времени (Constant Time):<br />
+size() - размен массива<br />
+isEmpty() - пустой массив<br />
+get(i) - получить элемент<br />
+set(i, x) - установить значение для элемента<br />
+iterator() - получить итератор<br />
+listIterator() - получить продвинутый лист Итератор
+
+O(n) - Линейное время (Linear time):<br />
+indexof(x) - поиск элемента по значению, необходимо проверять весь массив<br />
+clear() - очистить, необходимо удалять каждый элемент<br />
+remove(x) - необходимо найти элемент, а потом уменьшить размер, обойдя все элементы<br />
+remove(i) - необходимо удалить, а потом перебрать все элементы для уменьшения размера<br />
+
+
+
+
+
+
+
+
 
 
 
