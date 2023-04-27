@@ -1164,7 +1164,7 @@ https://storage.yandexcloud.net/wr4img/376517_15_14-1.png
 https://i.pinimg.com/originals/c8/c4/66/c8c466b3cfb59a2a209e59c2972db3c0.png
 https://dz2cdn1.dzone.com/storage/temp/13795578-java-collection-framework-hierarchy.jpg
 https://book.huihoo.com/oreilly/java/fclass/figs/jfc_1701.gif
-
+<br />
 
 **5.5 Все классы и интерфейсы.**
 
@@ -1199,7 +1199,7 @@ Map<K,V> - интерфейс <br />
 
 Краткое описание
 https://www.youtube.com/watch?v=0sWpjUvbGcQ
-
+<br />
 
 
 **5.6 Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
@@ -1240,7 +1240,7 @@ void iteratorInterface() {
     });
 }
 ```
-
+<br />
 
 **5.7 Collection<T>** - базовый интерфейс для всех коллекций и других интерфейсов коллекций, который включает такие методы как добавить(add(), addALL()), удалить(remove(), removeAll, removeIf(), retainAll()), проверить на наличие элементов(containsAll(),contains())
 
@@ -1307,7 +1307,7 @@ void collectionInterface(){
     collection9.clear(); // collection {}
 }
 ```
-
+<br />
 
 **5.8 List<T>** - интерфейс, который наследует все методы collection
 
@@ -1353,6 +1353,7 @@ void iteratorInterface() {
     });
 }
 ```
+<br />
 
 **5.9 Time complexity - Временая сложность** - временая сложность, показывает количество шагов для выполнения задачи
 
@@ -1371,7 +1372,7 @@ log2(32) = 5
 
 Онлайн калькулятор:
 https://umath.ru/calc/vychislenie-logarifma-chisla-onlajn/
-
+<br />
 
 **5.10 ArrayList<T>** - класс, который реализует динамический массив
 
