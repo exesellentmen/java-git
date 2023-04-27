@@ -1202,7 +1202,7 @@ https://www.youtube.com/watch?v=0sWpjUvbGcQ
 
 
 
-**5. Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
+**5.6 Iterable<T>** - интерфейс предоставляет методы для обхода элементов коллекций(bypass collection elements) с помощью forEach, for, iterator
 
 **Методы:**<br />
 - обход массивов(iterator.next()), <br />
