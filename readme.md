@@ -2814,7 +2814,7 @@ void hashTableTest() throws InterruptedException {
 https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 
 
-
+**Немного устаревшая библиотека java.io но объекты все еще используется вместе с java.nio, java.nio более приоритетная**
 **6 java.io  (java input and output)** - для чтения и работы с файлами  input / output
 
 **В основном java.io предназначен для чтения и записи данных в ресурс:**
@@ -3028,7 +3028,7 @@ void directoryTest() throws IOException {
 **6.4 InputStream** - абстрактный класс, который является основой для всех классов потоков ввода в Java из файла
 Преимущества и недостатки:
 
-Реализации:
+**Реализации:**
 - ByteArrayInputStream
 - FileInputStream
 - FilterInputStream
@@ -3039,12 +3039,13 @@ void directoryTest() throws IOException {
 - PipedInputStream
 - SequenceInputStream
 
-Область применения:
+**Область применения:**
 - читает данные из файлов
 - читает данные из сетевых соединений
 - входные потоки пользовательского ввода
 
-Пример:
+**Пример:**
+```java
 //Работа с InputStream 2
 @Test
 public void InputStreamSecondTest() throws IOException {
@@ -3080,27 +3081,30 @@ public void InputStreamSecondTest() throws IOException {
 
     inputStream.close(); // Закрываем поток вывода
 }
-
+```
 
 
 <br /><br />
 **6.5 ByteArrayInputStream** - предназначен для работы с байтами(byte[]), как если бы мы уже прочитали информацию из файла, удобно использовать для тестирования
 
-Преимущества и недостатки:
+**Преимущества:**
 + использовать для тестирования, когда источник получения данных не доступен
+
+**Недостатки:**
 - не удобно использовать с большими данныи, занимает много места
 
-Область применения:
+**Область применения:**
 - для тестирования, когда источник данных недоступен
 - когда byte[] уже в памяти и нам необходимо с ним работать
 
-Методы:
+**Методы:**
 reset() - Сбрасывает поток на начало, или на закладку mark(5) 5 символ
 mark(5) - метод устанавливает позицию для сброса
 markSupported() - проверяет есть ли возможность маркировки для сброса
 
 
-Пример:
+**Пример:**
+```java
 // Работа ByteArrayInputStream
 @Test
 void ByteArrayInputStreamTest() throws IOException {
@@ -3117,30 +3121,32 @@ void ByteArrayInputStreamTest() throws IOException {
     // Например прочитать 3 байта их byte[] и перевести их в строку
     String str = new String(byteArrayInputStream.readNBytes(3));
 }
-
+```
 
 <br /><br />
 **6.6 FileInputStream** - предназначен для чтения байтов из файла
 
-Преимущества и недостатки:
+**Преимущества:**
 + можно работать с большими файлами, которые не помещаются в ОС
 + одним из наиболлее быстрым способом чтения
 + можно использовать в многопоточной среде
 + чтение любых файлов в бинарном формате
+
+**Недостатки:**
 - блокирует при многопоточности, работает в синхронном формате
 - нет автоматического закрытия, нужно закрывать
 - нет проверки на ошибки, ошибка в доступе или чтения файла
 - не поддерживает ассинхронное чтение файла
 
 
-Область применения:
+**Область применения:**
 Может читать байты из таких файлов как:
 - изображения
 - аудио
 - видео
 другие файлы с бинарными данными
 
-Методы:
+**Методы:**
 skip(long n) - пропускает n символов
 getChannel() - возвращает объект FileChannel для файла связанного с данными
 getFD() - возвращает файловый дескриптор, описание открытого файла
@@ -3148,7 +3154,8 @@ available() - возвращает количество байтов
 
 
 
-Пример:
+**Пример:**
+```java
 //Работа с InputStream 2
 @Test
 public void InputStreamSecondTest() throws IOException {
@@ -3184,10 +3191,13 @@ public void InputStreamSecondTest() throws IOException {
 
     inputStream.close(); // Закрываем поток вывода
 }
+```
+
 
 <br /><br />
 **6.7 FilterInputStream** - абстрактный класс, который позволяет налету расширять функционал классов реализующих InputStream, например преобразовывать символы или исключать их
-Классы которые можно расширять:
+
+**Классы которые можно расширять:**
 ByteArrayInputStream
 FileInputStream
 FilterInputStream
@@ -3198,16 +3208,18 @@ ObjectInputStream(ObjectInput Interface)
 PipedInputStream
 SequenceInputStream
 
-Преимущества и недостатки:
+**Преимущества:**
 + Позволяет создавать свои классы на основе FilterInputStream и модифицировать их
 + Позволяет модифицировать потоки согласно задаче
 + Позволяет создать свой поток налету
 + Облегчает чтение и запись данных
+
+**Недостатки:**
 - Может повлечь за собой ухудшение производительности при добавление дополнительного функционала
 - Увеличение объема кода при добавление доп классов
 
 
-Область применение:
+**Область применение:**
 - чтение символов и преобразование их в другой формат
 - расширение функционала
 - Разделение входных данных на блоки
@@ -3215,7 +3227,8 @@ SequenceInputStream
 
 
 
-Пример:
+**Пример:**
+```java
 // Работа с FilterInputStream
 @Test
 void filterInputStreamTest() throws IOException {
@@ -3240,16 +3253,19 @@ void filterInputStreamTest() throws IOException {
     byte[] bytes = inputStream.readAllBytes();
     String result = new String(bytes);
 }
+```
 
 <br /><br />
 **6.8 BufferInputStream** - класс обертка, добавляет буферизацию InputStream. При первом вызове bufferInputStream.read(), получает сразу 8192 байта, после этого все операции чтения и так далее осуществляется из буфера.
 Это ускоряет работу с файлами
 
-Преимущества:
+**Преимущества:**
 + читает не из источника, а из буфера что ускоряет работу
 + экономит ресурсы при чтении
 + поддерживает маркировку, в результате мы можем перемещаться на необходимую позицию
 + можно использовать с другими классами обертками DataInputStream, ObjectInputStream
+
+**Недостатки:**
 - дополнительно используется оперативная память
 - задержка чтения, когда данных еще нет в буфере, например при первом чтении
 - иногда не поддерживает reset
@@ -3258,14 +3274,15 @@ void filterInputStreamTest() throws IOException {
 - не выгоден при требовании быстрого доступа к данным, т к при первом вызове собирает большой объем
 
 
-Область применения:
+**Область применения:**
 - Когда требуется много коротких операций чтения из файла, в этом случае уже после первой команды read() буфер получает большое количество символов и начинает работать с ними
 - Если необходимо читать в обратном направлении использую mark(0), reset() и так далее
 - Если сетевой источник данных испытывает перебои с доступом, выгодно считать сразу большой объем данных и работать из буфера
 - Для чтения больших текстовых данных
 
 
-Пример:
+**Пример:**
+```java
 // Для работы метода, необходимо открыть доступ к библиотекам с помощью опции
 // правим конфигурацию для этого медода
 // в поле опция добавляем
@@ -3294,7 +3311,7 @@ void bufferedInputStreamTest() throws IOException, NoSuchFieldException, Illegal
     bufferedInputStream.reset();
     String result = String.valueOf((char) bufferedInputStream.read()); // R
 }
-
+```
 
 
 <br /><br />
@@ -3303,16 +3320,19 @@ void bufferedInputStreamTest() throws IOException, NoSuchFieldException, Illegal
 
 DataOutputStream/DataInputStream - классы, которые необходимы для работы
 
-Преимущества и недостатки:
+**Преимущества:**
 + Упрощает считывание примитивных типов, работает только с определенными типами файлов а не с текстовыми
 + Упрощает чтение типов String
+
+**Недостатки:**
 - Работает только с примитивными типами, не может работать с объектами
 - Медленная производительность при работе с большими файлами
 
-Область применения:
+**Область применения:**
 - Применяется для считыания данных в определенных типах
 
-Пример:
+**Пример:**
+```java
 // Работа с DataOutputStream/DataInputStream
 @Test
 void DataInputAndOutputStreamTest() throws IOException {
@@ -3333,25 +3353,28 @@ void DataInputAndOutputStreamTest() throws IOException {
     String s1 = dataInputStream.readUTF(); // Считывание String
     boolean b = dataInputStream.readBoolean(); // Считывание Boolean
 }
+```
 
 <br /><br />
 **6.10 PushbackInputStream** - класс, работает с буфером, позволяет возвращать прочтенные байты. 
 Не смотря на то что метод unread может записывать новые байты в поток, он создан для того чтобы возвращать старые байты, а не записывать новые, это еще связанно с тем что он работает с буфером а не с источником, это может повлечь ошибки
 
 
-Преимущества и недостатки:
+**Преимущества:**
 + Способен возвращать данные обратно в поток
+
+**Недостатки:**
 - не может работать с другими FilterInputStream
 
-
-Область применения:
+**Область применения:**
 - Например для считывани и определение формата файла, а потом возвращаем байты обратно
 - Например при считывание некоректных данных, может возвращать их обратно, как бы для иммутабельности
 - для парсеров
 
-Методы:
+**Методы:**
 
-Пример:
+**Пример:**
+```java
 // Работа с PushbackInputStream
 @Test
 void pushbackInputStreamTest() throws IOException {
@@ -3371,7 +3394,7 @@ void pushbackInputStreamTest() throws IOException {
     pushbackInputStream.unread(readA);
     char readA1 = (char) pushbackInputStream.read(); // Получим обратно "c"
 }
-
+```
 
 
 <br /><br />
@@ -3380,21 +3403,24 @@ void pushbackInputStreamTest() throws IOException {
 ObjectInputStream/ObjectOutputStream - предназначены для Сериализация/Десериализация объектов из файла
 
 
-Преимущества и недостатки:
+**Преимущества:**
 + Упрощает сохранение объектов в файл
 + Позволяет передавать объекты между приложениями или между процессами
 + Можно использовать для кеширования чтобы избежать повторного создания
+
+**Недостатки:**
 - Нельзя сериализовать несериализуемые объекты
 - Может быть проблема совместимости если объект был изменен в промежутке между сериалзации и восстановления объекта
 - Может быть проблема с безопасностью, особенно если объекты не проверяются перед восстановлением
 
-Область применения:
+**Область применения:**
 - Сохранение пользовательского интерфейса
 - Можно сохранить в поток байтов в ByteArrayInputStream и передавать его по сети
 - Можно сохранять состояние объектов на диске
 - Для реализации кеширование объектов, что может ускорить работу
 
-Пример:
+**Пример:**
+```java
 // Работа с ObjectInputStream/ObjectOutputStream
 @Test
 void objectInputAndOutputStream() throws IOException, ClassNotFoundException {
@@ -3416,6 +3442,7 @@ void objectInputAndOutputStream() throws IOException, ClassNotFoundException {
     ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
     MyUser object = (MyUser) objectInputStream.readObject(); // читаем объект из файла
 }
+```
 
 <br /><br />
 
@@ -3435,7 +3462,8 @@ pipedOutputStream размер буфера = 1024 байта
 Если буфер заполнен, программа блокируется, пока из потока не прочитают данные pipedInputStream
 
 
-Пример работы 
+**Пример работы**
+```java
 // Работа с PipedInputStream/PipedOutputStream без многопоточности
 @Test
 void pipedInputAndOutputStream() throws IOException, InterruptedException {
@@ -3544,24 +3572,25 @@ void pipedInputAndOutputStreamMultithreading() throws IOException, InterruptedEx
     bufferedInputStream.close();
     bufferedOutputStream.close();
 }
-
+```
 
 
 <br /><br />
 
 **6.13 SequenceInputStream** - объединяет два или более потока источника данных InputStream и превращает их в один поток
 
-Преимущества:
+**Преимущества:**
 + Позволяет объединять несколько потоков
 + Поддерживает порядок добавления контента
 + Читает данные по мере поступления задач а не сразу в буфер
 
 
 
-Пример кода
+**Пример кода**
 SequenceInputStream sequenceInputStream = new SequenceInputStream(inputStreams.elements());
 
-Пример кода
+**Пример кода**
+```java
 // Пример объединение нескольких потоков в один с помощью SequenceInputStream
 // В результате создастся 1 поток, где будет находится контент по порядку из каждого файла
 @Test
@@ -3596,19 +3625,20 @@ void sequenceInputStreamTest() throws IOException {
     outputStream.close();
     sequenceInputStream.close();
 }
-
+```
 
 
 <br /><br />
 
 **6.14 OutputStream** - абстрактный класс который предоставляет интерфейс для записи данных в ресурс, файлы 
 
-Основные методы
+**Основные методы**
 write() - для записи данных в файл
 outputStream.flush(); - фиксирует данные в файле
 outputStream.close(); - закрывает поток
 
-Пример работы:
+**Пример работы:**
+```java
 // Пример работы с интерфейсом OutputStream
 // Запись в файл разные форматы символов
 @Test
@@ -3632,14 +3662,15 @@ void outputStreamTest() throws IOException {
     outputStream.flush();
     outputStream.close();
 }
-
+```
 
 
 <br /><br />
 
 **6.15 ByteArrayOutputStream** - класс, который создает поток работы с byte[] выгоден для тестирования работы с потоками byte[] или для работы с уже прочтенными данными
 
-Пример работы:
+**Пример работы:**
+```java
 @Test
 void byteArrayOutputStreamTest() throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -3648,12 +3679,14 @@ void byteArrayOutputStreamTest() throws IOException {
     byteArrayOutputStream.size(); // Возвращает размер потока
     byteArrayOutputStream.reset(); // Удаляет все данные которые были записаны в поток
 }
+```
 
 <br /><br />
 
 **6.16 FileOutputStream** - поток предназначен для записи в файл, выгоден при работе с маленькими файлами
 
-Пример работы:
+**Пример работы:**
+```java
 // Пример работы с интерфейсом OutputStream
 // Запись в файл разные форматы символов
 @Test
@@ -3677,16 +3710,18 @@ void outputStreamTest() throws IOException {
     outputStream.flush();
     outputStream.close();
 }
+```
 
 <br /><br />
 
 **6.17 FilterOutputStream** - предназначен для модификации стандартных реализаций OutputStream
 
-Преимущества:
+**Преимущества:**
 + Позволяет пользоваться уже готовыми методами внедренным OutputStream и при необходимости добавлять свою логику
 + Можно комбинировать с другими классами
 
-Пример работы:
+**Пример работы:**
+```java
 // Фильтрую данные перед записью в поток с помощью FilterOutputStream
 @Test
 void filterOutputStreamTest() throws IOException {
@@ -3712,12 +3747,14 @@ void filterOutputStreamTest() throws IOException {
     filterOutputStream.flush();
     filterOutputStream.close();
 }
+```
 
 <br /><br />
 
 **6.18 BufferedOutputStream** - предназначен для буферизации контента, т е когда мы записываем например данные в OutputStream мы не каждый раз осуществляем запись, я проводим запись в буфер и по завершению работы записываем все байты одним блоком, при этом буфер около 8192 байта
 
-Пример:
+**Пример:**
+```java
 // Пример работы с BufferedOutputStream
 @Test
 void bufferedOutputStreamTest() throws IOException {
@@ -3741,7 +3778,7 @@ void bufferedOutputStreamTest() throws IOException {
     byteArrayOutputStream.write("TestDirect2".getBytes(StandardCharsets.UTF_8));
     byteArrayOutputStream.flush();
 }
-
+```
 
 <br /><br />
 
@@ -3750,16 +3787,19 @@ void bufferedOutputStreamTest() throws IOException {
 
 DataOutputStream/DataInputStream - классы, которые необходимы для работы
 
-Преимущества и недостатки:
+**Преимущества:**
 + Упрощает запись/считывание примитивных типов, работает только с определенными типами файлов а не с текстовыми
 + Упрощает запись/считывание типов String
+
+**Недостатки:**
 - Работает только с примитивными типами, не может работать с объектами
 - Медленная производительность при работе с большими файлами
 
-Область применения:
+**Область применения:**
 - Применяется для считыания/запись данных в определенных типах
 
-Пример:
+**Пример:**
+```java
 // Работа с DataOutputStream/DataInputStream
 @Test
 void DataInputAndOutputStreamTest() throws IOException {
@@ -3780,11 +3820,12 @@ void DataInputAndOutputStreamTest() throws IOException {
     String s1 = dataInputStream.readUTF(); // Считывание String
     boolean b = dataInputStream.readBoolean(); // Считывание Boolean
 }
-
+```java
 
 <br /><br />
 
 **6.20 PrintStream** - позволяет печатать текст в различном формате
+```java
 public class Example {
     public static void main(String[] args) throws IOException {
         PrintStream ps = new PrintStream(System.out);
@@ -3792,6 +3833,7 @@ public class Example {
         ps.printf("The value of pi is approximately %.2f", Math.PI);
     }
 }
+```
 
 <br /><br />
 
@@ -3800,21 +3842,24 @@ public class Example {
 ObjectInputStream/ObjectOutputStream - предназначены для Сериализация/Десериализация объектов из файла
 
 
-Преимущества и недостатки:
+**Преимущества:**
 + Упрощает сохранение и чтение объектов в файл
 + Позволяет передавать объекты между приложениями или между процессами
 + Можно использовать для кеширования чтобы избежать повторного создания
+
+**Недостатки:**
 - Нельзя сериализовать несериализуемые объекты
 - Может быть проблема совместимости если объект был изменен в промежутке между сериалзации и восстановления объекта
 - Может быть проблема с безопасностью, особенно если объекты не проверяются перед восстановлением
 
-Область применения:
+**Область применения:**
 - Сохранение/Воссоздание пользовательского интерфейса
 - Можно сохранить/читать в поток байтов в ByteArrayInputStream и передавать его по сети
 - Можно сохранять/читать состояние объектов на диске
 - Для реализации кеширование объектов, что может ускорить работу
 
-Пример:
+**Пример:**
+```java
 // Работа с ObjectInputStream/ObjectOutputStream
 @Test
 void objectInputAndOutputStream() throws IOException, ClassNotFoundException {
@@ -3836,7 +3881,7 @@ void objectInputAndOutputStream() throws IOException, ClassNotFoundException {
     ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
     MyUser object = (MyUser) objectInputStream.readObject(); // читаем объект из файла
 }
-
+```
 
 <br /><br />
 
@@ -3856,7 +3901,8 @@ pipedOutputStream размер буфера = 1024 байта
 Если буфер заполнен, программа блокируется, пока из потока не прочитают данные pipedInputStream
 
 
-Пример работы 
+**Пример работы**
+```java
 // Работа с PipedInputStream/PipedOutputStream без многопоточности
 @Test
 void pipedInputAndOutputStream() throws IOException, InterruptedException {
@@ -3965,28 +4011,30 @@ void pipedInputAndOutputStreamMultithreading() throws IOException, InterruptedEx
     bufferedInputStream.close();
     bufferedOutputStream.close();
 }
+```
 
 <br /><br />
 
 **6.23 Reader/Writer** - абстрактные классы, которые предоставляют основные методы для считывания и записи данных в файл
 
-Работа с сетью через Reader и Writer
+**Работа с сетью через Reader и Writer**
 Мы можем создать подключение между 2мя программами или девайсами через сокет, для 
 ServerSocket - создает сервер, к которому можно подключиться через socket и считывать сообщения, возможно можно сделать несколько подключений
 
-Socket - это механизм, который позволяет взаимодействовать между 2мя процессами. В простом понимании это комбинация ip и port. Как правило механизм предоставляет возможность одному процессу отправлять данные а другом получать эти данные.
+**Socket** - это механизм, который позволяет взаимодействовать между 2мя процессами. В простом понимании это комбинация ip и port. Как правило механизм предоставляет возможность одному процессу отправлять данные а другом получать эти данные.
 
-ServerSocket - это серверный сокет, который создается для того чтобы слушать определенный порт, и если на него передаются данные он начинает их считыватьт, на пример с чатами в соцеальных сетях
+**ServerSocket** - это серверный сокет, который создается для того чтобы слушать определенный порт, и если на него передаются данные он начинает их считыватьт, на пример с чатами в соцеальных сетях
 
 
-Область применения(The scope):
+**Область применения(The scope):**
 - Чтение и запись из/в файла
 - Чтение и запись из сети
 - Чтение и запись из других input/output stream
 - Облегчает работу
 
 
-Пример:
+**Пример:**
+```java
 // Работа с Reader и Writer
 @Test
 void readerWriterTest() throws IOException {
@@ -4011,9 +4059,10 @@ void readerWriterTest() throws IOException {
     long skip = reader.skip(3); // Возвращает количество пропущенных символов
     char read1 = (char) reader.read();
 }
+```
 
-
-Пример работы с сетью:
+**Пример работы с сетью:**
+```java
 // Работа с Reader и Writer простой пример с Sockets
 @Test
 void readerWriterViaSocketsTest() throws IOException, InterruptedException {
@@ -4049,24 +4098,25 @@ void readerWriterViaSocketsTest() throws IOException, InterruptedException {
     bytesRead = clientInputStream.read(buffer);
     System.out.println(new String(buffer, 0, bytesRead));
 }
-
+```
 
 
 <br /><br />
 
 **6.24 BufferedReader/BufferedWriter** - высокоуровневые классы для записи и считывания информации использую буфер, что предоставляет несколько плюсов и минусов
 
-Отличие BufferedReader/BufferedWriter от BufferedInputStream/BufferedOutputStream:
+**Отличие BufferedReader/BufferedWriter от BufferedInputStream/BufferedOutputStream:**
 - BufferedReader.. более высокого уровня, предназначен только для работы со строками, а BufferedInputStream предназначен для работы с байтами, что позволяет записывать изображения, картинки и так далее..
 
 
-Преимущества:
+**Преимущества:**
 + более эффективен при большом количестве операций считывания, т к данные хранятся в буфере
     - при первом обращении обычно считывает сразу 8192 байта что занимает время
 - необходимо вызывать команды flush() или close() для записи сообщений
 
 
-Пример:
+**Пример:**
+```java
 // Работа с BufferedReader/BufferedWriter
 @Test
 void bufferedReaderBufferedWriterTest() throws IOException {
@@ -4093,7 +4143,7 @@ void bufferedReaderBufferedWriterTest() throws IOException {
     String message = byteArrayOutputStream.toString();
     
 }
-
+```
 <br /><br />
 
 **6.25 LineNamberReader** - данные класс удобен для чтения строк из файла
@@ -4102,13 +4152,16 @@ LineNumberReader lineNumberReader = new LineNumberReader(Reader..);
 С помощью него можно возвращать номер строки, или можно возвращать стрим строк
 Stream<String> lines = lineNumberReader.lines();
 
-Преимущества:
+**Преимущества:**
 + можно возвращать стрим строк и проводить с ними любые действия
 + можно возвращать номер строки
+
+**Недостатки:**
 - нельзя сделать reset() вместо этого необходимо создавать новый объект
 
 
-Пример:
+**Пример:**
+```java
 // Работа с LineNamberReader/LineNamberWriter
 @Test
 void lineNamberReaderLineNamberWriterTest() throws IOException {
@@ -4131,17 +4184,19 @@ void lineNamberReaderLineNamberWriterTest() throws IOException {
     Stream<String> lines = lineNumberReader.lines(); // Получаем стрим строк
     List<String> collect = lineNumberReader.lines().filter(el -> (el.contains("1") || el.contains("4"))).collect(Collectors.toList()); // фильтруем по значению
 }
+```
 
 <br /><br />
 
 **6.26 CharArrayReader/CharArrayWriter** - высокоуровневые классы для работы с массивами char, char[]. Удобно работать с уже полученными char[]
 
-Преимущества:
+**Преимущества:**
 + Более выгодно хранить большие текстовые данные чем в String
 + Совместим с StringWriter/StringReader
 
 
-Пример:
+**Пример:**
+```java
 // Работа с CharArrayReader/CharArrayWriter
 @Test
 void charArrayReaderCharArrayWriter() throws IOException {
@@ -4166,16 +4221,18 @@ void charArrayReaderCharArrayWriter() throws IOException {
     lines.forEach(System.out::println); // Выводим на печать
 
 }
+```
 
 <br /><br />
 
 **6.27 FilterReader/FilterWriter** - абстрактный класс который создается на основе Writer, позволяет записывать или читать символы или строки, при этом подвергая их различным процедурам, такими как фильтрация, изменение и так далее
 
-Преимущества:
+**Преимущества:**
 + Можно комбинировать с другими классами как с BufferedWriter/BufferedReader
 + Легкий в использовании, можно создавать классы на лету
 
-Пример:
+**Пример:**
+```java
 // Работа с FilterReader/FilterWriter
 @Test
 void filterReaderFilterWriterTest() throws IOException {
@@ -4225,6 +4282,7 @@ void filterReaderFilterWriterTest() throws IOException {
     System.out.println(messageFiltered);
     assertEquals(expectedMessage,messageFiltered);
 }
+```
 
 <br /><br />
 
@@ -4234,7 +4292,8 @@ void filterReaderFilterWriterTest() throws IOException {
 StringBuffer stringBuffer = new StringBuffer();
 
 
-Пример:
+**Пример:**
+```java
 // Работа с PushbackReader/PushbackWriter
 @Test
 void pushbackReaderPushbackWriterTest() throws IOException {
@@ -4267,16 +4326,18 @@ void pushbackReaderPushbackWriterTest() throws IOException {
     assertEquals("I wan", messagePart);
     
 }
-
+```
 
 
 <br /><br />
 
 **6.29 InputStreamReader/OutputStreamWriter** - используют для преобразование из байтового потока в более высоко уровневый поток символов и наоборот 
+```java
 InputStream <-> Reader; 
 OutputStream <-> Writer
+```
 
-Что можем делать с помощью этих потоков:
+**Что можем делать с помощью этих потоков:**
 - можем преобразовывать из InputStream/OutputStream в Reader/Writer
 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -4285,7 +4346,8 @@ InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 используем outputStream
 
 
-Пример работы:
+**Пример работы:**
+```java
 // Работа с InputStreamReader/OutputStreamWriter
 @Test
 void inputStreamReaderOutputStreamWriterTest() throws IOException {
@@ -4319,14 +4381,15 @@ void inputStreamReaderOutputStreamWriterTest() throws IOException {
     String mesOut = byteArrayOutputStream.toString();
     String mesInput = new String(bytesFromInputStream); // Будет нулевая строка, потому что скорее всего считывается в буфер inputStreamReader
 }
-
+```
 
 
 <br /><br />
 
 **6.30 FileReader/FileWriter** - высокоуровневые классы, предназначены для чтения/записи строк/символов из/в файл(а)
 
-Пример работы:
+**Пример работы:**
+```java
 // Работа с FileReader/FileWriter
 @Test
 void fileReaderFileWriterTest() throws IOException {
@@ -4353,7 +4416,7 @@ void fileReaderFileWriterTest() throws IOException {
 **6.31 PipedReader/PipedWriter** - для работы с потоками и обмена сообщениям между ними, блокирует выполнение при read
 
 
-Пример:
+**Пример:**
 // Работа с PipedReader/PipedWriter
 @Test
 void pipedReaderPipedWriterTest() throws IOException, InterruptedException {
@@ -4388,12 +4451,14 @@ void pipedReaderPipedWriterTest() throws IOException, InterruptedException {
     executorService.submit(producer);
     TimeUnit.SECONDS.sleep(100);
 }
+```
 
 <br /><br />
 
 **6.32 StringReader/StringWriter** - удобные стримы для работы со строками
 
-Пример:
+**Пример:**
+```java
 // Работа с StringReader/StringWriter
 @Test
 void stringReaderStringWriterTest() throws IOException {
@@ -4416,23 +4481,26 @@ void stringReaderStringWriterTest() throws IOException {
     }
     String resultMessageStringReader = stringWriter1.toString();
 }
-    
+```
     
 
 <br /><br />
 
 **6.33 PrintWriter** - класс который позволяет форматировать строки
 
-Пример:
+**Пример:**
+```java
 PrintWriter out = new PrintWriter(System.out);
 out.println("Hello, World!");
 out.printf("The value of pi is approximately %.2f%n", Math.PI);
+```
 
 <br /><br />
 
 **6.34 FileDescripte** - для работы с файлами на более высоком уровне, как правило происходит с помощью FileInputStream/FileOutputStream
 
-Пример
+**Пример**
+```java
 // Работа с FileDescripte
 @Test
 void fileDescripteTest() throws IOException {
@@ -4456,20 +4524,23 @@ void fileDescripteTest() throws IOException {
     }
     String message = stringWriter.toString();
 }
-
+```
 
 <br /><br />
 
 **6.35 RandomAccessFile** - Позколяет перемещаться по файлу и считывать или записывать в этот файл какие либо данные
 
-Ключевые методы:
+**Ключевые методы:**
+```java
 seek(3); // Переместиться на определенную позицию в файле
+```
 
-Преимущества:
+**Преимущества:**
 + Может как записывать так и считывать данные из файла
 + Может перемещаться в любую позицию в файле
 
-Пример:
+**Пример:**
+```java
 // Работа с RandomAccessFile
 @Test
 void RandomAccessFileTest() throws IOException {
@@ -4497,12 +4568,14 @@ void RandomAccessFileTest() throws IOException {
     }
     String message1 = stringBuffer1.toString();
 }
+```
 
 <br /><br />
 
 **6.36 ObjectStreamClass** - получение информации о классе, который можно сериализовать
 
-Пример работы:
+**Пример работы:**
+```java
 // Работа с ObjectStreamClass
 @Test
 void objectStreamClassTest(){
@@ -4517,12 +4590,14 @@ void objectStreamClassTest(){
     String name = objectStreamClass.getName();
     long serialVersionUID = objectStreamClass.getSerialVersionUID();
 }
+```
 
 <br /><br />
 
 **6.37 StreamTokenizer** - позволяет определять тип считанных данных
 
-Пример работы 
+**Пример работы**
+```java
 public static void main(String[] args) {
     try {
         FileReader reader = new FileReader("test.txt");
@@ -4552,7 +4627,7 @@ public static void main(String[] args) {
         e.printStackTrace();
     }
 }
-
+```
 
 
 
