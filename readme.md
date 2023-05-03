@@ -2823,6 +2823,11 @@ https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 - System.err, System.in, System.out;
 - при работе с буфером.
 
+**Аналоги:**
+- java nio
+- log4j
+- java.util.logging
+
 <br /><br />
 
 **6.1 java.io Иерархия классов**
@@ -2880,14 +2885,45 @@ ObjectStreamClass
 StreamTokenizer
 ```
 
+<br /><br />
 
+**6.2 Основные классы java.io**
 
+- File - класс для работы с файлами и директориями на файловой системе
 
+- FileInputStream и FileOutputStream - используются для чтения и записи байтов в файлы
 
+- FileReader и FileWriter - используются для чтения и записи символов в файлы.
 
+- BufferedReader и BufferedWriter - обеспечивают более эффективное чтение и запись символов в файлы.
 
+- ByteArrayInputStream и ByteArrayOutputStream - используются для чтения и записи байтов в массивы в памяти.
 
+- ObjectInputStream и ObjectOutputStream - используются для сериализации и десериализации объектов.
 
+- Socket и ServerSocket - используются для создания сокетных соединений между приложениями по сети.
+
+- Bits - используется для помещение примитивов в байтовый массив или наоборот
+
+- Buffered группы(BufferedWriter) - используется для буферизированных потоков, для оптимизации ввода вывода
+
+- ByteArrayInputStream/ByteArrayOutputStream - проведение операций над массивами байтов
+
+- CharArrayWriter/CharArrayReader - проведение операций над массивами символов
+
+- Console - для работы с консолью
+
+- DataInput/DataOutput/DataInputStream/DataOutputStream - для записи и считывания примитивных типов данных
+
+- DefaultFileSystem - возвращает тип файловой системы по умолчанию
+
+- File группа - работа с файлами
+
+- Object группа - для работы с различными объектами
+
+- Serializable - интерфейс для сериализации объектов
+
+<br /><br />
 
 
 
