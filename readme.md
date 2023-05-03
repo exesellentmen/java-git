@@ -2679,11 +2679,139 @@ i = (n - 1) & hash<br />
 - иначе связать новый и старый объекты с помощью структуры данных "связный список", указав ссылку на следующий объект в текущем и сохранить оба под нужным индексом; либо осуществить переход к древовидной структуре<br />
 
 
+**5.36 HashLinkedMap** - упорядочная map на основе двух связанного списка<br />
+
+**Заметки:**<br />
+- Не может быть повторяющихся ключей<br />
+- Не может быть ключа в виде null<br />
+
+**Временная сложность операций Поиск, Вставка, Удаление**<br />
+В худшем случае:<br />
+O(n)<br />
+
+Для ускорение работы до O(log(n)) Использование TreeSet<br />
+В картинке<br />
+https://2.bp.blogspot.com/-dFutRoKLpfw/V5Pf3VMjSZI/AAAAAAAAmQ4/HEHCWd9vtzICTy0IDSSMKw1kAKCs0yt2gCLcB/s1600/Image%2B687.png<br />
 
 
+**5.37 TreeMap** - map, которая обладает быстрым поиском, вставкой, удалением за счет красного дерева<br />
+
+**Время выполнения скрипта вставка, поиск, удаление:**<br />
+O(log n)<br />
+
+**Методы для TreeMap:**<br />
+```java
+treeMap.comparator(); // Возвращает Comparator для этого дерева
+
+treeMap.subMap("k1", "k2"); // Вернет подмножество начиная from key to key
+treeMap4.headMap("k1"); // вернет элементы до k1 в виде SortedMap
+treeMap4.tailMap("k1"); // вернет элементы после k1 в виде SortedMap
+
+treeMap6.firstKey(); // Получение первого ключа
+treeMap6.lastKey(); // Получение последнего ключа
+treeMap6.firstEntry(); // Получение первого элемента 
+treeMap6.lastEntry(); // Получение последнего элемента
+treeMap6.pollFirstEntry(); // Получение первого элемента с удалением
+treeMap6.pollLastEntry(); // Получение последнего элемента с удалением
+
+treeMap8.floorKey("k11"); // k1 вернет ближайший ключ или равный ближе к началу
+treeMap8.ceilingKey("k11"); // k2 вернет ближайший или равный ключ к концу
+treeMap8.higherKey("k1"); // k2 Вернет следующий ключ
+treeMap8.lowerKey("k1");// k0 Вернет предыдущий ключ
+```
+
+**Конструкторы:**
+```java
+// 1. With custom Comparator
+TreeMap<String, String> treeMap1 = new TreeMap<>((e1,e2)->(e2).compareTo(e1));
+
+// 2. With the other map
+TreeMap<String, String> treeMap2 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0"));
+```
+
+**Пример работы:**
+```java
+@Test
+void treeMapTest(){
+
+    //Differeте constructors
+
+    // 1. With custom Comparator
+    TreeMap<String, String> treeMap1 = new TreeMap<>((e1,e2)->(e2).compareTo(e1));
+
+    // 2. With the other map
+    TreeMap<String, String> treeMap2 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0"));
 
 
+    // Возвращаем Comparator
+    TreeMap<String, String> treeMap = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0"));
+    Comparator<? super String> comparator = treeMap.comparator();
 
+    // ?? Вернет часть map до указанного ключа
+    TreeMap<String, String> treeMap4 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0"));
+    SortedMap<String, String> treeMap5 = treeMap4.headMap("k1"); // вернет элементы до k1
+    SortedMap<String, String> treeMap44 = treeMap4.tailMap("k1"); // вернет элементы после k1
+
+    // Получение первого и последнего Ключа, Entry, или получение с удалением
+    TreeMap<String, String> treeMap6 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0"));
+    String s = treeMap6.firstKey();
+    String s1 = treeMap6.lastKey();
+    Map.Entry<String, String> entry = treeMap6.firstEntry();
+    Map.Entry<String, String> entry1 = treeMap6.lastEntry();
+    Map.Entry<String, String> entry2 = treeMap6.pollFirstEntry();
+    Map.Entry<String, String> entry3 = treeMap6.pollLastEntry();
+
+    // Получение подмножество map начиная от k1 заканчивая k2
+    TreeMap<String, String> treeMap7 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0","k3", "v3"));
+    SortedMap<String, String> stringStringSortedMap = treeMap7.subMap("k1", "k2");
+
+    TreeMap<String, String> treeMap8 = new TreeMap<>(Map.of("k1", "v1","k2", "v2","k0", "v0","k3", "v3"));
+
+    String k1 = treeMap8.floorKey("k11"); // k1 вернет ближайший ключ или равный ближе к началу
+    String k11 = treeMap8.ceilingKey("k11"); // k2 вернет ближайший или равный ключ к концу
+    String k12 = treeMap8.higherKey("k1"); // k2 Вернет следующий ключ
+    String k13 = treeMap8.lowerKey("k1");// k0 Вернет предыдущий ключ
+}
+```
+
+
+**5.38 Hashtable** - это потокобезопасная структура данных на основе map<br />
+По умолчанию размер 11<br />
+
+**Пример работы:**<br />
+```java
+@Test
+void hashTableTest() throws InterruptedException {
+    Hashtable<String, String> hashtable = new Hashtable<>();
+
+    Runnable producer = ()->{
+        for (int i = 0; i < 1000; i++) {
+            hashtable.put("k"+i,"v"+i);
+        }
+    };
+    Runnable consumer = () ->{
+        while (true){
+            System.out.println(hashtable.get("k1"));
+        }
+    };
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+    executorService.execute(consumer);
+
+    TimeUnit.SECONDS.sleep(1);
+
+    executorService.execute(producer);
+
+    TimeUnit.SECONDS.sleep(2);
+    executorService.shutdown();
+}
+```
+
+
+- ListView<br />
+- Enumeration<br />
+- Красное черное дерево<br />
+https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 
 
 
