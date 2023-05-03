@@ -2814,7 +2814,7 @@ void hashTableTest() throws InterruptedException {
 https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 
 
-**Немного устаревшая библиотека java.io но объекты все еще используется вместе с java.nio, java.nio более приоритетная**
+**Немного устаревшая библиотека java.io но объекты все еще используется вместе с java.nio, java.nio более приоритетная**<br />
 **6 java.io  (java input and output)** - для чтения и работы с файлами  input / output
 
 **В основном java.io предназначен для чтения и записи данных в ресурс:**
