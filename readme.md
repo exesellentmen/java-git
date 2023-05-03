@@ -2815,14 +2815,68 @@ https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 
 
 
+**6 java.io  (java input and output)** - для чтения и работы с файлами  input / output
 
+**В основном java.io предназначен для чтения и записи данных в ресурс:**
+- файл;
+- при работе с сетевым подключением;
+- System.err, System.in, System.out;
+- при работе с буфером.
 
+**6.1 java.io Иерархия классов**
 
+```java
 
+File - класс для работы с файлами и директориями на файловой системе
 
+InputStream - абстрактный
+    ByteArrayInputStream
+    FileInputStream
+    FilterInputStream
+        BufferInputStream
+        DataInputStream(DataInput Interface)
+        PushbackInputStream
+    ObjectInputStream(ObjectInput Interface)
+    PipedInputStream
+    SequenceInputStream
 
+OutputStream - абстрактный
+    ByteArrayOutputStream
+    FileOutputStream
+    FilterOutputStream
+        BufferedOutputStream
+        DataOutputStrean(DataInput Interface)
+        PrintStream
+    ObjectOutputStream
+    PipedOutputStream
 
+Reader - абстрактный
+    BufferedReader
+        LineNamberReader
+    CharArrayReader
+    FilterReader - абстрактный
+        PushbackReader
+    InputStreamReader
+        FileReader
+    PipedReader
+    StringReader
+    
+Writer - абстрактный
+    BufferedWriter
+    CharArrayWriter
+    FilterWriter - абстрактный
+    OutputStreamWriter
+        FileWriter
+    PipedWriter
+    PrintWriter
+    StringWriter
+    
 
+FileDescripte
+RandomAccessFile
+ObjectStreamClass
+StreamTokenizer
+```
 
 
 
