@@ -2926,9 +2926,67 @@ StreamTokenizer
 <br /><br />
 
 
+**6.3 File** - это класс, который позволяет создавать, удалять, перемещать, получать информацию о файлах и директориях
 
 
+**Преимущества и недостатки:**
++ Прост в использование, очень легкий API
++ Кросплатформенный, позволяет работать в Windows, Mac os, linux
++ Имеет необходимый набор методов для создания, перемещения, удаления
++ Имеет возможность работы как с абсолютном путем так и с относительным
+- Нет прямых методов Ввода вывода, для этого необходимо использовать IputStream, OutputStream
+- Безопасность, не предоставляет безопасный доступ к файлам
+- Ограниченный набор методов, для более широкого функционала, придется использовать другие классы
+- Нет проверки на ошибки, например при удалении, не выдает исключения в случае отсутствия файлов
 
+**Область применения:**
+- Применяется для работы с файлами, их перемещение, удаление
+- Применяется для работы с папками, для их перемещения, создания, удаления, отображение содержимого
+
+
+**Пример:**
+```java
+//Работа с классом File
+@Test
+void fileTest() throws IOException {
+    // Создание файла в конре проекта
+    String path = "test.txt"; // Создаст файл в корне программы
+    File file = new File(path);
+    file.createNewFile(); // Создание файла
+
+    // Получение данных о файле
+    File file1 = new File(path);
+    String name = file1.getName(); // имя файла
+    String absolutePath = file1.getAbsolutePath(); // абсолютный путь к файлу
+    String path1 = file1.getPath(); // получение относительного пути к файлу
+    String parent = file1.getParent(); // получение пути к родительской дирректории
+    long length = file1.length(); // вес файла в Bytes
+
+    boolean exists = file1.exists(); // проверяем существует ли файл
+    boolean canWrite = file1.canWrite(); // можно ли записывать в файл
+    boolean canRead = file1.canRead(); // можно ли считывать файл
+    boolean canExecute = file1.canExecute(); //можно выполнить
+    boolean isDirectory = file1.isDirectory(); // проверяет если это папка
+    boolean isFile = file1.isFile(); // проверяет если это файл
+    boolean hidden = file1.isHidden(); //проверяет если файл скрыт
+
+    long sizeGB = file1.getTotalSpace() / (long) Math.pow(10, 9); // размер хранилища, где находится файл в гб
+    long freeSizeGB = file1.getFreeSpace() / (long) Math.pow(10, 9); // свободное место на диске, где находится файл в гб
+}
+
+// Работа с папками java
+@Test
+void directoryTest() throws IOException {
+    String path = "myFolder";
+    File directory = new File("myFolder");
+    if(!directory.exists()) // если папки нет, создаем ее
+    { 
+        boolean resultMkdir = directory.mkdir(); // создание папки
+    }
+    File[] innerFiles = directory.listFiles(); // вывести содержимое папки
+    boolean isDirectory = directory.isDirectory(); // Является ли файл каталогом
+}
+```
 
 
 
