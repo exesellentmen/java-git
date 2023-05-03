@@ -2812,10 +2812,10 @@ void hashTableTest() throws InterruptedException {
 - Enumeration<br />
 - Красное черное дерево<br />
 https://www.youtube.com/watch?v=TTk4jX7y64U<br />
-
+<br /><br />
 
 **Немного устаревшая библиотека java.io но объекты все еще используется вместе с java.nio, java.nio более приоритетная**<br />
-**6 java.io  (java input and output)** - для чтения и работы с файлами  input / output
+### 6 java.io  (java input and output)** - для чтения и работы с файлами  input / output
 
 **В основном java.io предназначен для чтения и записи данных в ресурс:**
 - файл;
@@ -2989,39 +2989,6 @@ void directoryTest() throws IOException {
     boolean isDirectory = directory.isDirectory(); // Является ли файл каталогом
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
------------------------------------------------------------------------
 
 <br /><br />
 
