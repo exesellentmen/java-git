@@ -2483,8 +2483,200 @@ void transferQueueTest() throws InterruptedException {
 }
 ```
 
+**5.34 Map** - массив с ключем и значением, в виде ключа может выступать другой объект, например String, Integer и так далее<br />
+
+**Реализации:**<br />
+```java
+HashMap<K,V> // - стандартная Map, Если порядок хранения элементов не важен производительность основных операций в худшем случае O(1)
+LinkedHashMap<K,V> // - упорядоченная реализация на основе 2х связного списка, производительность основных операций в худшем случае O(n)
+TreeMap<K,V> // - упорядоченная, должен быть реализован Comparable, также реализует интерфейсы: SortedMap<K,V>, NavigableMap<K,V>, производительность основных операций O(log(N))
+HashTable(sync) // - синхронная Map для многопоточных приложений
+```
+
+**Заметки:**<br />
+- ключ не может быть null<br />
+- значения могут быть null<br />
+- не может быть 2 одинаковых ключа<br />
+
+**Источник:**
+https://java-blog.ru/collections/map-v-java-s-primerami
+
+**Методы:**
+map.put("Key", "value"); // Установить элемент, ключ key..
+map.put("Key", "new val"); // Перезапись старого значения
+map.get("Key"); // получить значение (value)
+map.containsKey("Key"); // Есть ли такой ключ (true)
+map.putAll(map2); // Добавить все пары ключ значение из другого массива
+map.getOrDefault("E", "default value 11"); // получение значение по ключу E, если такого ключа нет возвращает значение по умолчанию = "default value 11"
+map.containsValue("value 1"); // Проверка есть ли значение true/false
+map.values(); // Получение значений массива в виде Collection<T>
+map.remove("key1"); // удаление элемента по ключу
+map.clear(); // удаление всех записей из map
+map.replace("key", "new value"); // заменить значение, если ключа нет, ничго не происходит
+map.size(); // количество элементов
+map.isEmpty(); // проверка пуста ли карта
+map.compute("key: ",(key,val) -> val == null ? null : val+"prefix"); // заменяет значение на новое
+associativeArray.computeIfAbsent("newKey",(k)->"key: "+k); //(выполнить если отсутствует) установи только в том случае если такого ключа еще нет новый элемент
+map.computeIfPresent("key: ",(key,val) -> val == null ? null : val+"prefix"); //(выполнить если присутствует) выполняет лямбдя выражение только если элемент присутствует в map
+map.merge("key", "newValue",(oldValue, newValue) -> newValue + ", oldValue=("+oldValue+")"); // Вставка элемента, если элемента нету, вставляем "newValue", если значение для элемента есть выполняем лямбда выражение
 
 
+**Варианты обхода массива:**
+```java
+Map<String, String > map = new HashMap<>(Map.of("k1","v1","k2","v2","k3","v3"));
+// Обход элементов массива, обход элементов ассоциативного массива 1
+System.out.println("Via Foreach");
+for (String key: map.keySet()) {
+    System.out.println("Key: " + key + " Value: " + map.get(key));
+}
+
+// Обход элементов массива, обход элементов ассоциативного массива 2
+System.out.println("Via Foreach 2");
+for (Map.Entry<String, String> element: map.entrySet()) {
+    System.out.println("Key: " + element.getKey() + " Value: " + element.getValue());
+}
+
+// Обход значений массива, обход значений ассоциативного массива 3
+for (String value: map.values()) {
+    System.out.println(value);
+}
+
+// Обход ассоциативного массива через иттератор 4
+Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+while (iterator.hasNext()){
+    Map.Entry<String, String> element = iterator.next();
+    System.out.println("Key: " + element.getKey() + " Value: " + element.getValue());
+}
+```
+
+Пример:
+```java
+@Test
+void mapInterfaceTest(){
+
+    Map<String, String> associativeArray = new HashMap<>();
+
+    // Устанавливаем элемент по ключу
+    String put1 = associativeArray.put("Name", "Paul"); // null
+    String put = associativeArray.put("Last Name", "Petrov"); // null
+    String previousName = associativeArray.put("Name", "PaulSecond"); // Paul
+
+    // Получение элемента по кючу
+    String name = associativeArray.get("Name"); // PaulSecond
+    String lastName = associativeArray.get("Last Name"); // Petrov
+    String aNull = associativeArray.get("Null"); // null
+
+    // Проверка наличие ключа
+    boolean isName = associativeArray.containsKey("Name"); // true
+
+    Collection<String> values = associativeArray.values();
+
+    // Заменяет значение ключа согласно лямбда выражению
+    associativeArray.compute("Name",(k,v)->v+" prefix key: "+k);
+
+    // Установить значение для ключа если отсутствует элемент
+    associativeArray.computeIfAbsent("Name",(k)->"key: "+k);
+    associativeArray.computeIfAbsent("NameWithoutValue",(k)->"key: "+k);
+
+    // Установить значение для ключа если присутствует элемент
+    associativeArray.compute("Last Name",(k,v)->v+" prefix2 key: "+k);
+
+
+    // Вставка элемента, если элемента нету, вставляем "newValue", если значение для элемента есть выполняем лямбда выражение
+    Map<String, String > map1 = new HashMap<>(Map.of("k1","v1","k2","v2","k3","v3"));
+
+    map1.merge("k1", "new val",(oldValue, newValue) -> newValue + " - old value(" + oldValue + ")");
+    map1.merge("k4", "new val k4",(oldValue, newValue) -> newValue + "-new val k4");
+
+    // Получение set ключей
+    Set<String> set = map1.keySet();
+
+    // Преобразуем map в Set c Entry
+    Set<Map.Entry<String, String>> entries = map1.entrySet();
+
+    //Вставка если отсутствует элемента
+    map1.putIfAbsent("k1","Test"); // ничего не произойдет т к элемент есть
+    map1.putIfAbsent("New Key","new value"); // добавить новый элемент
+
+    // Добавить все элементы из другой map
+    map1.putAll(associativeArray);
+
+    //Заменит все элементы согласно функции
+    map1.replaceAll((k,v)->v+" new prefix");
+    
+    Map<String, String > map = new HashMap<>(Map.of("k1","v1","k2","v2","k3","v3"));
+
+    // Обход элементов массива, обход элементов ассоциативного массива 1
+    System.out.println("Via Foreach");
+    for (String key: map.keySet()) {
+        System.out.println("Key: " + key + " Value: " + map.get(key));
+    }
+
+    // Обход элементов массива, обход элементов ассоциативного массива 2
+    System.out.println("Via Foreach 2");
+    for (Map.Entry<String, String> element: map.entrySet()) {
+        System.out.println("Key: " + element.getKey() + " Value: " + element.getValue());
+    }
+
+    // Обход значений массива, обход значений ассоциативного массива 3
+    for (String value: map.values()) {
+        System.out.println(value);
+    }
+
+    // Обход ассоциативного массива через иттератор 4
+    Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+    while (iterator.hasNext()){
+        Map.Entry<String, String> element = iterator.next();
+        System.out.println("Key: " + element.getKey() + " Value: " + element.getValue());
+    }
+
+}
+```
+
+
+**5.35 HashMap** - ассоциативный массив, который преобразует ключи в hashCode для использования в качестве ключей<br />
+
+Методы такие же как в Map
+
+**Источник:**<br />
+С алгоритмами и внутренностями HashMap<br />
+https://javarush.com/groups/posts/2496-podrobnihy-razbor-klassa-hashmap<br />
+
+
+**Вложенные элементы в HashMap можно представить как Node**<br />
+Node содержит: <br />
+final int hash — хеш текущего элемента<br />
+final K key — ключ текущего элемента<br />
+V value — значение текущего элемента<br />
+Node < K, V> next — ссылка на следующий узел в пределах одной корзины<br />
+
+**Сама HashMap содержит:**<br />
+transient Node < K, V> [] table - хэш таблица, которая хранить ключ значение<br />
+transient int size - количество пар ключ значение<br />
+int threshold - предельное количество элементов<br />
+final float loadFactor - если хеш таблица заканчивается то будет создана новая хеш таблица и перемещены туда новые элементы<br />
+transient Set< Map.Entry< K,V>> entrySet - содержит entrySet с помощью которого мы можем перебирать хэш таблицу<br />
+
+
+**Конструкторы**<br />
+public HashMap() - hashmap с 16 элементами<br />
+public HashMap(oldMap) - hashmap из старой Map<br />
+public HashMap(int initialCapacity) - сразу задаем размер, коректный размер будет 2 в степени какого-то числа, например: 8, 16 ...<br />
+public HashMap(int initialCapacity, float loadFactor) - здесь можно установить коифициент загруженности при достижение которого создается новая таблица с переносом в нее всех элементов<br />
+
+
+**Алгоритм добавления в HashMap**<br />
+1) В начале рассчитываем hash ключа функцией hash() - необходимо для оптимизации<br />
+2) вычесляем индекс ячейки массива, куда можно вставить элемент<br />
+i = (n - 1) & hash<br />
+3) Создаем объект Node<br />
+4) Если элемента нету, то добавляем, если есть то сравниваем элементы с hashCode и ключами и когда найдем наш, заменяем значение<br />
+
+**Колизии**<br />
+В итоге, добавление элементов при коллизии (в пределах одного бакета) выглядит следующим образом:<br />
+- проверяем с помощью методов hashCode() и equals(), что оба ключа одинаковы.<br />
+- если ключи одинаковы, заменить текущее значение новым.<br />
+- иначе связать новый и старый объекты с помощью структуры данных "связный список", указав ссылку на следующий объект в текущем и сохранить оба под нужным индексом; либо осуществить переход к древовидной структуре<br />
 
 
 
