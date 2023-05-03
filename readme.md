@@ -2823,7 +2823,7 @@ https://www.youtube.com/watch?v=TTk4jX7y64U<br />
 - System.err, System.in, System.out;
 - при работе с буфером.
 
-<br />
+<br /><br />
 
 **6.1 java.io Иерархия классов**
 
